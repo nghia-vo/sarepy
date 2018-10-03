@@ -12,4 +12,4 @@ Features
 - Methods for tackling different types of stripe artifacts: full stripes, partial stripes, unresponsive stripes, and fluctuating stripes.
 - Different implementations of the equalization-based methods, i.e equalizing the response curves of adjacent pixels.
 - A stripe detection method based on the combination of four basic processing tools: normalizing, sorting, fitting, and thresholding.
-- Implementations of a normalization-based method, a regularization-based method, a FFT-based method, and a wavelet-FFT-based method.
+- Implementation of a
