@@ -249,3 +249,52 @@ def remove_unresponsive_or_fluctuating_stripe(sinogram, snr, size):
     # Use algorithm 5 to remove residual stripes
     #sinogram = remove_large_stripe(sinogram, snr, size) 
     return sinogram
+
+def remove_all_stripe(sinogram, snr, la_size, sm_size):
+    """
+    Remove all types of stripe artifacts by combining algorithm 6, 5, and 3.
+    Angular direction is along the axis 0.
+    ---------
+    Parameters: - sinogram: 2D array.
+                - snr: ratio used to discriminate between useful
+                    information and noise
+                - la_size: size of the median filter to remove
+                    large stripes.
+                - sm_size: size of the median filter to remove
+                    small-to-medium stripes.
+    ---------
+    Return:     - stripe-removed sinogram.
+    """
+    (nrow, _) = sinogram.shape
+    sinosmooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 30)
+    listdiff = np.sum(np.abs(sinogram - sinosmooth), axis=0)
+    nmean = np.mean(listdiff)
+    listdiffbck = median_filter(listdiff, la_size)
+    listdiffbck[listdiffbck == 0.0] = nmean
+    listfact = listdiff / listdiffbck
+    listmask = detect_stripe(listfact, snr)
+    listmask = binary_dilation(listmask, iterations=1).astype(listmask.dtype)
+    listmask[0:2] = 0.0
+    listmask[-2:] = 0.0
+    listx = np.where(listmask < 1.0)[0]
+    listy = np.arange(nrow)
+    matz = sinogram[:, listx]
+    finter = interpolate.interp2d(listx, listy, matz, kind='linear')
+    listxmiss = np.where(listmask > 0.0)[0]
+    if len(listxmiss) > 0:
+        matzmiss = finter(listxmiss, listy)
+        sinogram[:, listxmiss] = matzmiss
+    # Use algorithm 5 to remove residual stripes
+    sinogram = remove_large_stripe(sinogram, snr, la_size)
+    # Use algorithm 3 to remove small-to-medium stripes
+    sinogram = remove_stripe_based_sorting(sinogram, sm_size)
+    return sinogram
+
+# ----------------------------------------------------------------------------
+# Example of use:
+# sinogram = remove_stripe_based_sorting(sinogram, 31)
+# sinogram = remove_stripe_based_filtering(sinogram, 5, 31)
+# sinogram = remove_stripe_based_fitting(sinogram, 1, 5, 20)
+# sinogram = remove_unresponsive_or_fluctuating_stripe(sinogram1, 3, 81)
+# sinogram = remove_large_stripe(sinogram1, 3, 81)
+# sinogram = remove_all_stripe(sinogram, 3, 81, 31)
