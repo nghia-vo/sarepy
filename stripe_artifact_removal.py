@@ -15,7 +15,7 @@
 #============================================================================
 # Author: Nghia T. Vo
 # E-mail: nghia.vo@diamond.ac.uk
-# Description: Original implementation of methods of removing stripe artifacts
+# Description: Original implementation of stripe artifact removal methods, 
 # Nghia T. Vo, Robert C. Atwood, and Michael Drakopoulos, "Superior
 # techniques for eliminating ring artifacts in X-ray micro-tomography," Optics
 # Express 26, 28396-28412 (2018).
