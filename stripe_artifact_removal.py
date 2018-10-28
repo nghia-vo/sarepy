@@ -228,8 +228,8 @@ def remove_unresponsive_or_fluctuating_stripe(sinogram, snr, size):
     Return:     - stripe-removed sinogram.
     """
     (nrow, _) = sinogram.shape
-    sinosmooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 30)
-    listdiff = np.sum(np.abs(sinogram - sinosmooth), axis=0)
+    sinosmoothed = np.apply_along_axis(uniform_filter1d, 0, sinogram, 10)
+    listdiff = np.sum(np.abs(sinogram - sinosmoothed), axis=0)
     nmean = np.mean(listdiff)
     listdiffbck = median_filter(listdiff, size)
     listdiffbck[listdiffbck == 0.0] = nmean
@@ -265,28 +265,8 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
     ---------
     Return:     - stripe-removed sinogram.
     """
-    (nrow, _) = sinogram.shape
-    sinosmooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 30)
-    listdiff = np.sum(np.abs(sinogram - sinosmooth), axis=0)
-    nmean = np.mean(listdiff)
-    listdiffbck = median_filter(listdiff, la_size)
-    listdiffbck[listdiffbck == 0.0] = nmean
-    listfact = listdiff / listdiffbck
-    listmask = detect_stripe(listfact, snr)
-    listmask = binary_dilation(listmask, iterations=1).astype(listmask.dtype)
-    listmask[0:2] = 0.0
-    listmask[-2:] = 0.0
-    listx = np.where(listmask < 1.0)[0]
-    listy = np.arange(nrow)
-    matz = sinogram[:, listx]
-    finter = interpolate.interp2d(listx, listy, matz, kind='linear')
-    listxmiss = np.where(listmask > 0.0)[0]
-    if len(listxmiss) > 0:
-        matzmiss = finter(listxmiss, listy)
-        sinogram[:, listxmiss] = matzmiss
-    # Use algorithm 5 to remove residual stripes
+    sinogram = remove_unresponsive_or_fluctuating_stripe(sinogram, snr, la_size)
     sinogram = remove_large_stripe(sinogram, snr, la_size)
-    # Use algorithm 3 to remove small-to-medium stripes
     sinogram = remove_stripe_based_sorting(sinogram, sm_size)
     return sinogram
 
