@@ -40,7 +40,7 @@ def remove_stripe_based_sorting(sinogram, size):
     Angular direction is along the axis 0
     ---------
     Parameters: - sinogram: 2D array. 
-                - size: size of the median filter.
+                - size: window size of the median filter.
     ---------
     Return:     - stripe-removed sinogram.
     """
@@ -63,8 +63,10 @@ def remove_stripe_based_filtering(sinogram, sigma, size):
     Angular direction is along the axis 0
     ---------
     Parameters: - sinogram: 2D array.
-                - sigma: sigma of the Gaussian window.
-                - size: size of the median filter.
+                - sigma: sigma of the Gaussian window which is used to separate 
+                        the low-pass and high-pass components of the intensity
+                        profiles of each column.
+                - size: window size of the median filter.
     ---------
     Return:     - stripe-removed sinogram.
     """
@@ -151,7 +153,7 @@ def detect_stripe(listdata, snr):
     ---------
     Parameters: - listdata: 1D normalized array.
                 - snr: ratio used to discriminate between useful
-                    information and noise
+                    information and noise.
     ---------
     Return:     - 1D binary mask.
     """
@@ -183,8 +185,8 @@ def remove_large_stripe(sinogram, snr, size):
     ---------
     Parameters: - sinogram: 2D array.
                 - snr: ratio used to discriminate between useful
-                    information and noise
-                - size: size of the median filter.
+                    information and noise.
+                - size: window size of the median filter.
     ---------
     Return:     - stripe-removed sinogram.
     """
@@ -223,7 +225,7 @@ def remove_unresponsive_or_fluctuating_stripe(sinogram, snr, size):
     Parameters: - sinogram: 2D array.
                 - snr: ratio used to discriminate between useful
                     information and noise
-                - size: size of the median filter.
+                - size: window size of the median filter.
     ---------
     Return:     - stripe-removed sinogram.
     """
@@ -258,9 +260,9 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
     Parameters: - sinogram: 2D array.
                 - snr: ratio used to discriminate between useful
                     information and noise
-                - la_size: size of the median filter to remove
+                - la_size: window size of the median filter to remove
                     large stripes.
-                - sm_size: size of the median filter to remove
+                - sm_size: window size of the median filter to remove
                     small-to-medium stripes.
     ---------
     Return:     - stripe-removed sinogram.
@@ -273,7 +275,7 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
 # ----------------------------------------------------------------------------
 # Example of use:
 # sinogram = remove_stripe_based_sorting(sinogram, 31)
-# sinogram = remove_stripe_based_filtering(sinogram, 5, 31)
+# sinogram = remove_stripe_based_filtering(sinogram, 3, 31)
 # sinogram = remove_stripe_based_fitting(sinogram, 1, 5, 20)
 # sinogram = remove_unresponsive_or_fluctuating_stripe(sinogram1, 3, 81)
 # sinogram = remove_large_stripe(sinogram1, 3, 81)
