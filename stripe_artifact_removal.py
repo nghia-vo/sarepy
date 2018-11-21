@@ -216,7 +216,7 @@ def remove_large_stripe(sinogram, snr, size):
     sinogram[:, listxmiss] = sino_corrected[:, listxmiss]
     return sinogram
 
-def remove_unresponsive_or_fluctuating_stripe(sinogram, snr, size):
+def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size):
     """
     Algorithm 6 in the paper. Remove unresponsive or fluctuating stripes by:
     locating stripes, correcting by interpolation.
@@ -267,7 +267,7 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
     ---------
     Return:     - stripe-removed sinogram.
     """
-    sinogram = remove_unresponsive_or_fluctuating_stripe(sinogram, snr, la_size)
+    sinogram = remove_unresponsive_and_fluctuating_stripe(sinogram, snr, la_size)
     sinogram = remove_large_stripe(sinogram, snr, la_size)
     sinogram = remove_stripe_based_sorting(sinogram, sm_size)
     return sinogram
@@ -277,6 +277,6 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
 # sinogram = remove_stripe_based_sorting(sinogram, 31)
 # sinogram = remove_stripe_based_filtering(sinogram, 3, 31)
 # sinogram = remove_stripe_based_fitting(sinogram, 1, 5, 20)
-# sinogram = remove_unresponsive_or_fluctuating_stripe(sinogram1, 3, 81)
+# sinogram = remove_unresponsive_and_fluctuating_stripe(sinogram1, 3, 81)
 # sinogram = remove_large_stripe(sinogram1, 3, 81)
 # sinogram = remove_all_stripe(sinogram, 3, 81, 31)
