@@ -14,4 +14,6 @@ Features
 - Methods for cleaning different types of stripe artifacts: full stripes, partial stripes, unresponsive stripes, and fluctuating stripes.
 - Different implementations of the equalization-based methods, i.e equalizing the response curves of adjacent pixels.
 - A stripe detection method based on the combination of processing techniques: normalizing, sorting, fitting, and thresholding.
+- Matlab translation of algorithms 3,4,5,6.
+- Python implementation of an original method of calculating center of rotation.
 
