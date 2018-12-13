@@ -19,7 +19,7 @@
 # Nghia T. Vo, Robert C. Atwood, and Michael Drakopoulos, "Superior
 # techniques for eliminating ring artifacts in X-ray micro-tomography," Optics
 # Express 26, 28396-28412 (2018).
-# https://www.osapublishing.org/oe/fulltext.cfm?uri=oe-26-22-28396&id=399265
+# https://doi.org/10.1364/OE.26.028396
 # Publication date: 18th October 2018
 #============================================================================
 
