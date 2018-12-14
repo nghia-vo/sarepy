@@ -229,6 +229,7 @@ def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size):
     ---------
     Return:     - stripe-removed sinogram.
     """
+    sinogram = np.copy(sinogram) # Make it mutable
     (nrow, _) = sinogram.shape
     sinosmoothed = np.apply_along_axis(uniform_filter1d, 0, sinogram, 10)
     listdiff = np.sum(np.abs(sinogram - sinosmoothed), axis=0)
