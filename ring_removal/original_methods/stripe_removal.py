@@ -24,14 +24,15 @@
 #============================================================================
 
 import numpy as np
-from scipy.ndimage import median_filter
 from scipy import signal
-#from scipy.fftpack import fft, ifft, fft2, ifft2
-import pyfftw.interfaces.scipy_fftpack as fft
 from scipy.signal import savgol_filter
+from scipy.ndimage import median_filter
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import uniform_filter1d
 from scipy import interpolate
+#from scipy.fftpack import fft, ifft, fft2, ifft2
+import pyfftw.interfaces.scipy_fftpack as fft
+
 
 def remove_stripe_based_sorting(sinogram, size):
     """
@@ -130,7 +131,7 @@ def remove_stripe_based_fitting(sinogram, order, sigmax, sigmay):
     Angular direction is along the axis 0
     ---------
     Parameters: - sinogram: 2D array.
-                - order: polynomical fit order.
+                - order: polynomial fit order.
                 - sigmax, sigmay: sigmas of the Gaussian window.
     ---------
     Return:     - stripe-removed sinogram.
@@ -274,7 +275,7 @@ def remove_all_stripe(sinogram, snr, la_size, sm_size):
     return sinogram
 
 # ----------------------------------------------------------------------------
-# Example of use:
+# Example of use for a sinogram with w x h ~ 2k x 2k pixel
 # sinogram = remove_stripe_based_sorting(sinogram, 31)
 # sinogram = remove_stripe_based_filtering(sinogram, 3, 31)
 # sinogram = remove_stripe_based_fitting(sinogram, 1, 5, 20)
