@@ -1,0 +1,9 @@
+python
+numpy
+scipy
+pillow
+h5py
+pyfftw
+pywt
+astra
+#tomopy
