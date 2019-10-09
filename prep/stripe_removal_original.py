@@ -52,7 +52,7 @@ def remove_stripe_based_sorting(sinogram, size):
     matcomb = np.asarray(np.dstack((matindex, sinogram)))
     matsort = np.asarray(
         [row[row[:, 1].argsort()] for row in matcomb])
-    matsort[:, :, 1] = median_filter(matsort[:, :, 1], (size, size))
+    matsort[:, :, 1] = median_filter(matsort[:, :, 1], (size, 1))
     matsortback = np.asarray(
         [row[row[:, 0].argsort()] for row in matsort])
     sino_corrected = matsortback[:, :, 1]
