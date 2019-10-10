@@ -8,9 +8,13 @@
  Nghia T. Vo, Robert C. Atwood, and Michael Drakopoulos, *"Superior techniques for eliminating ring artifacts in X-ray micro-tomography,"*
 26, 28396-28412 (2018). https://doi.org/10.1364/OE.26.028396
 
-### Author
+#### Authors:
 
 Nghia Vo - *Diamond Light Source*
+
+#### Contributors:
+
+Daniel S. Hussey - *NIST: National Institute of Standards and Technology* 
 
 Features
 ========
