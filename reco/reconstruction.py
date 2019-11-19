@@ -80,10 +80,14 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0, method="FBP_CUDA", num
     sinogram = interpolation.shift(sinogram, (0, shift), mode='nearest')
     sino_id = astra.data2d.create('-sino', proj_geom, sinogram)
     rec_id = astra.data2d.create('-vol', vol_geom)
+    if "CUDA" not in method:
+        proj_id = astra.create_projector('line', proj_geom, vol_geom)
     cfg = astra.astra_dict(method)
     cfg['ProjectionDataId'] = sino_id
     cfg['ReconstructionDataId'] = rec_id
-    if method == "FBP_CUDA":
+    if "CUDA" not in method:
+        cfg['ProjectorId'] = proj_id
+    if method == "FBP_CUDA" or method =="FBP":
         cfg["FilterType"] = filter
     alg_id = astra.algorithm.create(cfg)
     astra.algorithm.run(alg_id, num_iter)
