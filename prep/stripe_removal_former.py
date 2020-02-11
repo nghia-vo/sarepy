@@ -45,12 +45,20 @@ def remove_stripe_based_normalization(sinogram, sigma, num_chunk):
     """
     Remove stripes using the method in [1].
     Angular direction is along the axis 0.
-    ---------
-    Parameters: - sinogram: 2D array.
-                - sigma: sigma of the Gaussian window.
-                - num_chunk: number of chunks of rows.
-    ---------
-    Return:     - stripe-removed sinogram.
+
+    Parameters
+    ----------
+    sinogram : float
+        2D array.
+    sigma : int
+        Sigma of the Gaussian window.
+    num_chunk : int
+        Number of chunks of rows.
+
+    Returns
+    -------
+    float
+        2D array. Stripe-removed sinogram.
     """
     (nrow, _) = sinogram.shape
     listindex = np.array_split(np.arange(nrow), num_chunk)
@@ -69,11 +77,18 @@ def calculate_reg_mat(width, alpha):
     """
     Calculate coefficients used for the regularization-based method.
     Eq. (7) in [2].
-    ---------
-    Parameters: - width: width of a square array.
-                - alpha: regularization parameter.
-    ---------
-    Return:     - square array.
+
+    Parameters
+    ----------
+    width : int
+        Width of a square array.
+    alpha : float
+        Regularization parameter.
+
+    Returns
+    -------
+    float
+         Square array.
     """
     tau = 2.0 * np.arcsinh(np.sqrt(alpha) * 0.5)
     ilist = np.arange(0, width)
@@ -83,8 +98,8 @@ def calculate_reg_mat(width, alpha):
     mat2 = matii + matjj
     mat1a = np.cosh((width - 1 - mat1) * tau)
     mat2a = np.cosh((width - mat2) * tau)
-    matcoe = - \
-        (np.tanh(0.5 * tau) / (alpha * np.sinh(width * tau))) * (mat1a + mat2a)
+    matcoe = - (np.tanh(
+        0.5 * tau) / (alpha * np.sinh(width * tau))) * (mat1a + mat2a)
     return matcoe
 
 
@@ -92,12 +107,20 @@ def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
     """
     Remove stripes using the method in [2].
     Angular direction is along the axis 0.
-    ---------
-    Parameters: - sinogram: 2D array.
-                - alpha: regularization parameter.
-                - num_chunk: number of chunks of rows.
-    ---------
-    Return:     - stripe-removed sinogram.
+
+    Parameters
+    ----------
+    sinogram : float
+        2D array.
+    alpha : float
+        Regularization parameter.
+    num_chunk : int
+        Number of chunks of rows.
+
+    Returns
+    -------
+    float
+        2D array. Stripe-removed sinogram.
     """
     sinogram = -np.log(sinogram)
     (nrow, ncol) = sinogram.shape
@@ -122,13 +145,20 @@ def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
 def create_2d_window(width, height, u0, v0, n):
     """
     Create a 2d window used for the fft-based method
-    ---------
-    Parameters: - height, width: shape of the window.
-                - u0, n: to define the shape of 1D Butterworth
-                        low-pass filter.
-                - v0: number of rows (* 2) to be applied the filter.
-    ---------
-    Return:     - 2D window.
+
+    Parameters
+    ----------
+    height, width : int
+        Shape of the window.
+    u0, n : int
+        To define the shape of 1D Butterworth low-pass filter.
+    v0 : int
+        Number of rows (* 2) to be applied the filter.
+
+    Returns
+    -------
+    float
+        2D array.
     """
     centerc = np.ceil(width / 2.0) - 1.0
     centerr = np.int16(np.ceil(height / 2.0) - 1)
@@ -145,14 +175,22 @@ def remove_stripe_based_fft(sinogram, u0, n, v0, pad):
     """
     Remove stripes using the method in [3].
     Angular direction is along the axis 0.
-    ---------
-    Parameters: - sinogram: 2D array.
-                - u0, n: to define the shape of 1D Butterworth
-                        low-pass filter.
-                - v0: number of rows (* 2) to be applied the filter.                
-                - pad: padding for FFT
-    ---------
-    Return:     - stripe-removed sinogram.
+
+    Parameters
+    ----------
+    sinogram : float
+        2D array.
+    u0, n : int
+        To define the shape of 1D Butterworth low-pass filter.
+    v0 : int
+        Number of rows (* 2) to be applied the filter.
+    pad : int
+        Padding for FFT
+
+    Returns
+    -------
+    float
+        2D array. Stripe-removed sinogram.
     """
     if pad > 0:
         sinogram = np.pad(sinogram, ((pad, pad), (0, 0)), mode='mean')
@@ -172,14 +210,24 @@ def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad):
     with a small improvement of using different ways of padding to
     reduce the side effect of the FFT.
     Angular direction is along the axis 0.
-    ---------
-    Parameters: - sinogram: 2D array.
-                - level: wavelet decomposition level.
-                - sigma: Damping parameter. Larger is stronger.
-                - order: order of the the Daubechies wavelets.
-                - pad: padding for FFT
-    ---------
-    Return:     - stripe-removed sinogram.
+
+    Parameters
+    ----------
+    sinogram : float
+        2D array.
+    level : int
+        Wavelet decomposition level.
+    sigma : int
+        Damping parameter. Larger is stronger.
+    order : int
+        Order of the the Daubechies wavelets.
+    pad : int
+        Padding for FFT
+
+    Returns
+    -------
+    float
+        2D array. Stripe-removed sinogram.
     """
     (nrow, ncol) = sinogram.shape
     if pad > 0:

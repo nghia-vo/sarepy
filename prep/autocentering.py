@@ -23,7 +23,7 @@
 #============================================================================
 
 """
-Module for calculating center of rotation in tomography.
+Module for calculating center of rotation in parallel-beam tomography.
 
 """
 
@@ -37,16 +37,24 @@ def make_mask(height, width, radius):
     """
     Make a binary mask to select coefficients outside the double-wedge region.
     Eq.(3) in https://doi.org/10.1364/OE.22.019078
-    ---------
-    Parameters: - height: image height.
-                - width: image width.
-                - radius: Radius of an object, in pixel unit.
-    ---------
-    Return:     - 2D binary mask.
+    
+    Parameters
+    ----------
+    height : int
+        Image height.
+    width : int
+        Image width.
+    radius : int 
+        Radius of an object, in pixel unit.
+    
+    Returns
+    -------
+    float
+        2D binary mask.
     """
     du = 1.0 / width
     dv = (height - 1.0) / (height * 2.0 * np.pi)
-    rdrop = min(20, np.int16(np.ceil(0.1 * height)))
+    rdrop = min(20, np.int16(np.ceil(0.05 * height)))
     cen_hei = np.int16(np.ceil(height / 2.0)) - 1
     cen_wid = np.int16(np.ceil(width / 2.0)) - 1
     mask = np.zeros((height, width), dtype=np.float32)
@@ -69,17 +77,26 @@ def coarse_search_based_integer_shift(
     Note:
     1-pixel shift of the 180-360 sinogram is equivalent to 0.5-pixel shift \
     of CoR. Auto-search is limited to the range of [width/4; width - width/4].
-    ---------
-    Parameters: - sino_0_180: Sinogram in the angle range of [0;180].
-                - start_cor: starting point for searching CoR.
-                - stop_cor: ending point for searching CoR.
-                - ratio: Ratio between a sample and the width of the \
-                sinogram. Default value of 0.5 works in most cases (even when\
-                the sample is larger than the field_of_view).
-    ---------
-    Return:     - Center of rotation with haft-pixel accuracy.
+    
+    Parameters
+    ----------
+    sino_0_180 : float 
+        Sinogram in the angle range of [0;180].
+    start_cor : int 
+        Starting point for searching CoR.
+    stop_cor : int
+        Ending point for searching CoR.
+    ratio : float 
+        Ratio between a sample and the width of the sinogram. Default value 
+        of 0.5 works in most cases (even when the sample is larger than the 
+        field_of_view).
+    
+    Returns
+    -------
+    float
+        Center of rotation with haft-pixel accuracy.
     """
-    # Denoising. Should not use on a downsampled sinogram
+    # Denoising. Should not be used for a downsampled sinogram
     # sino_0_180 = ndi.gaussian_filter(sino_0_180, (3,1), mode='reflect')
     (nrow, ncol) = sino_0_180.shape
     if start_cor is None:
@@ -118,16 +135,26 @@ def fine_search_based_subpixel_shift(
     180-360 sinogram around the coarse CoR. The 180-360 sinogram is made\
     by flipping horizontally a 0-180 sinogram.
     Angular direction is along the axis 0.
-    ---------
-    Parameters: - sino_0_180: Sinogram in the angle range of [0;180].
-                - start_cor: Starting point for searching CoR.
-                - search_radius: Searching range (start_cor +/- search_radius)
-                - search_step: Searching step.
-                - ratio: Ratio between the sample and the width of the\
-                 sinogram. Default value of 0.5 works in most cases (even\
-                 when a sample is larger than the field_of_view).
-    ---------
-    Return:     - Center of rotation.
+    
+    Parameters
+    ----------
+    sino_0_180 : float 
+        Sinogram in the angle range of [0;180].
+    start_cor : float 
+        Starting point for searching CoR.
+    search_radius : float
+        Searching range = (start_cor +/- search_radius)
+    search_step : float 
+        Searching step.
+    ratio : float
+        Ratio between the sample and the width of the sinogram. Default value 
+        of 0.5 works in most cases (even when a sample is larger than the 
+        field_of_view).
+    
+    Returns
+    -------
+    float
+        Center of rotation.
     """
     # Denoising
     sino_0_180 = ndi.gaussian_filter(sino_0_180, (2, 2), mode='reflect')
@@ -163,12 +190,20 @@ def fine_search_based_subpixel_shift(
 def _downsample(image, dsp_fact0, dsp_fact1):
     """
     Downsample an image by averaging.
-    ---------
-    Parameters: - image: 2D array.
-                - dsp_fact0: downsampling factor along axis 0.
-                - dsp_fact1: downsampling factor along axis 1.
-    ---------
-    Return:     - Downsampled image.
+    
+    Parameters
+    ----------
+    image : float
+        2D array.
+    dsp_fact0 : int
+        Downsampling factor along axis 0.
+    dsp_fact1 : int
+        Downsampling factor along axis 1.
+    
+    Returns
+    -------
+    float
+        2D array. Downsampled image.
     """
     (height, width) = image.shape
     dsp_fact0 = np.clip(np.int16(dsp_fact0), 1, height // 2)
@@ -188,19 +223,30 @@ def find_center_vo(
     Find center of rotation.
     Note: Downsampling is a trade-off solution to reduce computational cost.
     There's a risk of being stuck in a local minimum by doing that.
-    ---------
-    Parameters: - sinogram: Sinogram in the angle range of [0;180].
-                - start_cor: starting point for searching CoR.
-                - stop_cor: ending point for searching CoR.
-                - step_cor: Sub-pixel accuracy of searched CoR.
-                - fine_srange: Searching range for finding CoR\
-                 with sub-pixel accuracy
-                - ratio: Ratio between the sample and the width of\
-                 the sinogram. Default value of 0.5 works in most cases (even\
-                 when a sample is larger than the field_of_view).
-                - dsp: Enable/disable downsampling.
-    ---------
-    Return:     - Center of rotation.
+    
+    Parameters 
+    ----------
+    sinogram : float
+        Sinogram in the angle range of [0;180].
+    start_cor : float 
+        Starting point for searching CoR.
+    stop_cor : float
+        Ending point for searching CoR.
+    step_cor : float
+        Sub-pixel accuracy of searched CoR.
+    fine_srange : float
+        Searching range for finding CoR with sub-pixel accuracy.
+    ratio : float
+        Ratio between the sample and the width of the sinogram. Default value 
+        of 0.5 works in most cases (even when a sample is larger than the 
+        field_of_view).
+    dsp : bool 
+        Enable/disable downsampling.
+    
+    Returns
+    -------
+    float
+        Center of rotation.
     """
     (nrow, ncol) = sinogram.shape
     dsp_row = 1

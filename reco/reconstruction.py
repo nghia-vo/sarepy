@@ -32,12 +32,18 @@ from scipy.ndimage import interpolation
 def cirle_mask(width, ratio):
     """
     Create a circle mask.
-    ---------
-    Parameters: - width: width of a square array.
-                - ratio: ratio between the diameter of the mask and
-                    the width of the array.
-    ---------
-    Return:     - square array.
+    
+    Parameters
+    ----------
+    width : int
+        Width of a square array.
+    ratio : float 
+        Ratio between the diameter of the mask and the width of the array.
+    
+    Returns
+    -------
+    float
+        Square array.
     """
     mask = np.zeros((width, width), dtype=np.float32)
     center = width // 2
@@ -52,20 +58,32 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0, method="FBP_CUDA", num
     """
     Wrapper of reconstruction methods implemented in the astra toolbox package.
     https://www.astra-toolbox.com/docs/algs/index.html
-    ---------
-    Parameters: - sinogram: 2D tomographic data.
-                - center: center of rotation.
-                - angles: tomographic angles in radian.
-                - ratio: apply a circle mask to the reconstructed image.
-                - method: Reconstruction algorithms
-                    for CPU: 'FBP', 'SIRT', 'SART', 'ART', 'CGLS'.
-                    for GPU: 'FBP_CUDA', 'SIRT_CUDA', 'SART_CUDA', 'CGLS_CUDA'.
-                - num_iter: Number of iterations if using iteration methods.
-                - filter: apply filter if using FBP method:
-                    'hamming', 'hann', 'lanczos', 'kaiser', 'parzen',...
-                - pad: padding to reduce the side effect of FFT.
-    ---------
-    Return:     - square array.        
+    
+    Parameters
+    ----------
+    sinogram : float 
+        2D tomographic data.
+    center : float
+        Center of rotation.
+    angles : float 
+        1D array. Tomographic angles in radian.
+    ratio : float
+        To apply a circle mask to the reconstructed image.
+    method : str 
+        Reconstruction algorithms. for CPU: 'FBP', 'SIRT', 'SART', 'ART', 
+        'CGLS'. for GPU: 'FBP_CUDA', 'SIRT_CUDA', 'SART_CUDA', 'CGLS_CUDA'.
+    num_iter : int 
+        Number of iterations if using iteration methods.
+    filter : str 
+        Apply filter if using FBP method. Options: 'hamming', 'hann', 
+        'lanczos', 'kaiser', 'parzen',...
+    pad : int 
+        Padding to reduce the side effect of FFT.
+    
+    Returns
+    -------
+    float
+        Square array.        
     """
     if pad > 0:
         sinogram = np.pad(sinogram, ((0, 0), (pad, pad)), mode='edge')
@@ -106,13 +124,22 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0, method="FBP_CUDA", num
 #     """
 #     Wrapper of the gridrec method implemented in the tomopy package.
 #     https://tomopy.readthedocs.io/en/latest/api/tomopy.recon.algorithm.html
-#     ---------
-#     Parameters: - sinogram: 2D tomographic data.
-#                 - center: center of rotation.
-#                 - angles: tomographic angles in radian.
-#                 - ratio: apply a circle mask to the reconstructed image.
-#     ---------
-#     Return:     - square array.
+#     
+#     Parameters
+#     ----------
+#     sinogram : float 
+#         2D tomographic data.
+#     center : float
+#         Center of rotation.
+#     angles : float
+#         1D array. Tomographic angles in radian.
+#     ratio : float
+#         To apply a circle mask to the reconstructed image.
+#     
+#     Returns
+#     -------
+#     float
+#         Square array.
 #     """
 #     (nrow, ncol) = sinogram.shape
 #     if angles is None:

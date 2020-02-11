@@ -38,10 +38,16 @@ import errno
 def load_image(file_path):
     """
     Load data from an image.
-    ---------
-    Parameters - file_path: Path to the file.
-    ---------
-    Return:    - 2D array.
+    
+    Parameters
+    ----------
+    file_path : str
+        Path to the file.
+    
+    Returns
+    -------
+    float
+        2D array.
     """
     if ("\\" in file_path):
         raise ValueError(
@@ -75,15 +81,23 @@ def _get_key(name, obj):
 def load_hdf_file(file_path, key_path=None, index=None, axis=0):
     """
     Load data from a hdf5 file.
-    ---------
-    Parameters: - file_path: Path to the file
-                - key_path: Key path to the dataset
-                - index: Values for slicing data.
-                 Can be integer, tuple or list, e.g index=(start,stop,step)
-                 or index=(slice1, slice2, slice3,slice4).
-                - axis: Slice direction
-    ---------
-    Return:     - 2D array or 3D array.
+    
+    Parameters
+    ----------
+    file_path : str
+        Path to the file
+    key_path : str
+        Key path to the dataset
+    index : int 
+        Values for slicing data. Can be integer, tuple or list, 
+        e.g index=(start,stop,step) or index=(slice1, slice2, slice3,slice4).
+    axis : int
+        Slice direction
+    
+    Returns
+    -------
+    float
+        2D array or 3D array.
     """
     ifile = None
     idata = None
@@ -113,7 +127,6 @@ def load_hdf_file(file_path, key_path=None, index=None, axis=0):
     if len(shape) == 3:
         axis = np.clip(axis, 0, 3)
         (depth, height, width) = idata.shape
-        data_type = idata.dtype
         if (index == None):
             mat = np.float32(idata[:, :, :])
         else:
@@ -192,12 +205,20 @@ def _create_file_name(file_path):
 def save_image(file_path, mat, overwrite=True):
     """
     Save 2D data to an image.
-    ---------
-    Parameters: - file_path: Path to the file.
-                - mat: 2D array.
-                - overwrite: Overwrite the existing file if True.
-    ---------
-    Return:     - Updated file path.
+    
+    Parameters
+    ----------
+    file_path : str 
+        Path to the file.
+    mat : int or float 
+        2D array.
+    overwrite : bool 
+        Overwrite the existing file if True.
+    
+    Returns
+    -------
+    str
+        Updated file path.
     """
     if ("\\" in file_path):
         raise ValueError(
@@ -220,13 +241,22 @@ def save_image(file_path, mat, overwrite=True):
 def save_hdf_file(file_path, idata, key_path='entry', overwrite=True):
     """
     Write data to a hdf5 file.
-    ---------
-    Parameters: - file_path: Path to the file.
-                - idata: Data to be saved.
-                - key_path: Key path to the dataset.
-                - overwrite: Overwrite the existing file if True.
-    ---------
-    Return:     - Updated file path.
+    
+    Parameters
+    ----------
+    file_path : str
+        Path to the file.
+    idata : data-type 
+        Data to be saved.
+    key_path : str 
+        Key path to the dataset.
+    overwrite : bool
+        Overwrite the existing file if True.
+    
+    Returns
+    -------
+    str
+        Updated file path.
     """
     if ("\\" in file_path):
         raise ValueError(
