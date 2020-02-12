@@ -25,3 +25,7 @@ Features
 - Matlab translation of algorithms 3,4,5,6.
 - Implementations of a basic pipeline of tomography reconstruction: data loading, automated determination of center of rotation, ring artifact removal, tomographic reconstruction, and data saving.
 
+Update Notes
+------------
+- 09/10/2019: Add methods for loading and saving data (from vounwarp), methods for calculating center of rotation, wrappers of reconstruction methods (from tomopy and astra). This allows users to try or test ring removal methods easily.
+- 11/02/2020: Allow to use 2D kernel in the median filter of the sorting-based correction methods. This is done based on feedbacks from neutron imaging users. Note that this increases the computational cost. Add some sinograms for testing.

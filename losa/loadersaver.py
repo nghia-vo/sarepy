@@ -171,7 +171,10 @@ def load_hdf_file(file_path, key_path=None, index=None, axis=0):
 def _create_folder(file_path):
     """
     Create folder if not exists.
-    Parameter: file_path.
+    
+    Parameters
+    ----------
+    file_path : str        
     """
     file_base = os.path.dirname(file_path)
     if not os.path.exists(file_base):
@@ -185,8 +188,15 @@ def _create_folder(file_path):
 def _create_file_name(file_path):
     """
     Create file name to avoid overwriting.
-    Parameter: File path.
-    Return:    Updated file path.
+    
+    Parameters
+    ----------
+    file_path : str
+    
+    Returns
+    -------
+    str
+        Updated file path.
     """
     file_base, file_ext = os.path.splitext(file_path)
     if os.path.isfile(file_path):
