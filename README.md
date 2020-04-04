@@ -19,10 +19,10 @@ Daniel S. Hussey - *NIST: National Institute of Standards and Technology*
 How to use
 ==========
 Clone or download the codes to your local machine, then insert the following two lines to your python codes:  
-
+```python
 import sys  
-sys.path.insert(0, '<path-to-sarepy-pck>')  
-
+sys.path.insert(0, "/path-to-sarepy-pck/")  
+```
 make sure that the python libs in the requirements.txt are installed before use.
 
 Features
