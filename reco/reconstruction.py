@@ -120,31 +120,31 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0, method="FBP_CUDA", num
     return rec
 
 
-# def recon_gridrec(sinogram, center, angles=None, ratio=1.0):
-#     """
-#     Wrapper of the gridrec method implemented in the tomopy package.
-#     https://tomopy.readthedocs.io/en/latest/api/tomopy.recon.algorithm.html
-#     
-#     Parameters
-#     ----------
-#     sinogram : float 
-#         2D tomographic data.
-#     center : float
-#         Center of rotation.
-#     angles : float
-#         1D array. Tomographic angles in radian.
-#     ratio : float
-#         To apply a circle mask to the reconstructed image.
-#     
-#     Returns
-#     -------
-#     float
-#         Square array.
-#     """
-#     (nrow, ncol) = sinogram.shape
-#     if angles is None:
-#         angles = np.linspace(0.0, 180.0, nrow) * np.pi / 180.0
-#     sinogram = np.expand_dims(sinogram, 1)
-#     recont = tomopy.recon(sinogram, angles, center=center, algorithm='gridrec')
-#     recont = tomopy.circ_mask(recont, axis=0, ratio=ratio)
-#     return recont[0]
+def recon_gridrec(sinogram, center, angles=None, ratio=1.0):
+    """
+    Wrapper of the gridrec method implemented in the tomopy package.
+    https://tomopy.readthedocs.io/en/latest/api/tomopy.recon.algorithm.html
+     
+    Parameters
+    ----------
+    sinogram : float 
+        2D tomographic data.
+    center : float
+        Center of rotation.
+    angles : float
+        1D array. Tomographic angles in radian.
+    ratio : float
+        To apply a circle mask to the reconstructed image.
+     
+    Returns
+    -------
+    float
+        Square array.
+    """
+    (nrow, ncol) = sinogram.shape
+    if angles is None:
+        angles = np.linspace(0.0, 180.0, nrow) * np.pi / 180.0
+    sinogram = np.expand_dims(sinogram, 1)
+    recont = tomopy.recon(sinogram, angles, center=center, algorithm='gridrec')
+    recont = tomopy.circ_mask(recont, axis=0, ratio=ratio)
+    return recont[0]

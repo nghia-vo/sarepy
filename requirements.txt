@@ -6,4 +6,4 @@ h5py
 pyfftw
 pywt
 astra
-#tomopy
+tomopy
