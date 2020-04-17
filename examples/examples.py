@@ -36,7 +36,10 @@ out_path = "C:/reconstruction/"
 file_path = file_path.replace("\\", "/")
 _, file_name = os.path.split(file_path)
 
-# Load image
+# Load a 180-degree sinogram.
+# If use a 360-degree sinogram, make sure to update the angles
+# and use haft of the sinogram for finding the center of rotation.
+
 sinogram = losa.load_image(file_path)
 
 # Calculate center of rotation
@@ -47,6 +50,10 @@ if center == 0.0:
     print("Calculate center of rotation.....")
     center = cen.find_center_vo(
         sinogram, ncol // 2 - search_range, ncol // 2 + search_range)
+    # Uncomment the following lines if use a 360-degree sinogram
+    # center = cen.find_center_vo(sinogram[0:nrow //2 + 1],
+    #                             ncol // 2 - search_range,
+    #                             ncol // 2 + search_range)
     print("Center of rotation ---> {}".format(center))
 ratio = (min(center, abs(ncol - center))) / (ncol * 0.5)
 
@@ -54,20 +61,33 @@ ratio = (min(center, abs(ncol - center))) / (ncol * 0.5)
 rec_image = rec.recon_astra(
     -np.log(sinogram), center, ratio=ratio, pad=50)
 # rec_image = rec.recon_gridrec(-np.log(sinogram), center, ratio=ratio)
+
+# If use a 360-degree sinogram
+# list_angles = np.linspace(0.0, 360.0, nrow) * np.pi / 180.0
+# rec_image = rec.recon_astra(
+#     -np.log(sinogram), center, angles=list_angles, ratio=ratio, pad=50)
+# rec_image = rec.recon_gridrec(
+#     -np.log(sinogram), center, angles=list_angles, ratio=ratio)
+
 losa.save_image(out_path + "/rec_before_correction_" + file_name, rec_image)
 
 # Apply ring artifact methods.
-# Parameters based on the size of a sinogram ~ 2k x 2k
+#==========================================================================
+# Parameters in the following examples are chosen for sinograms under /data
+# Making sure that you change them corresponding to your data, start from
+# small parameters.
+#==========================================================================
 # ->>> Uncomment one of following methods
 
 # Using original methods
 
 sinogram = srm1.remove_all_stripe(sinogram, 3.0, 81, 31)
+# sinogram = srm1.remove_unresponsive_and_fluctuating_stripe(sinogram, 3.0, 81)
 # sinogram = srm1.remove_stripe_based_sorting(sinogram, 31)
 # sinogram = srm1.remove_stripe_based_fitting(sinogram, 2, 10, 60)
 # sinogram = srm1.remove_stripe_based_filtering(sinogram, 3, 31)
 # sinogram = srm1.remove_large_stripe(sinogram, 3.0, 81)
-# sinogram = srm1.remove_unresponsive_and_fluctuating_stripe(sinogram, 3.0, 81)
+
 
 # Using improved methods
 
@@ -86,4 +106,12 @@ sinogram = srm1.remove_all_stripe(sinogram, 3.0, 81, 31)
 rec_image = rec.recon_astra(
     -np.log(sinogram), center, ratio=ratio, pad=50)
 # rec_image = rec.recon_gridrec(-np.log(sinogram), center, ratio=ratio)
+
+# If use a 360-degree sinogram
+# list_angles = np.linspace(0.0, 360.0, nrow) * np.pi / 180.0
+# rec_image = rec.recon_astra(
+#     -np.log(sinogram), center, angles=list_angles, ratio=ratio, pad=50)
+# rec_image = rec.recon_gridrec(
+#     -np.log(sinogram), center, angles=list_angles, ratio=ratio)
+
 losa.save_image(out_path + "/rec_after_correction_" + file_name, rec_image)
