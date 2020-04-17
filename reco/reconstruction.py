@@ -26,7 +26,7 @@ Module for reconstruction algorithms.
 import numpy as np
 import astra
 from scipy.ndimage import interpolation
-# import tomopy
+import tomopy
 
 
 def cirle_mask(width, ratio):
