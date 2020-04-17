@@ -24,6 +24,7 @@ import sys
 sys.path.insert(0, "/path-to-sarepy-pck/")  
 ```
 make sure that the python libs in the requirements.txt are installed before use.
+Details of how to use the methods can be found in /examples/examples.py.
 
 Features
 ========
