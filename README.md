@@ -23,8 +23,9 @@ Clone or download the codes to your local machine, then insert the following two
 import sys  
 sys.path.insert(0, "path-to-sarepy-pck")
 ```
-make sure that the python libs in the requirements.txt are installed before use.
-Details of how to use the methods can be found in /examples/examples.py.
+make sure that the python libs in the requirements.txt are installed before use.  
+Details of how to use the methods can be found in /examples/examples.py.  
+Noting that parameters chosen in these examples are for the sinograms in the /data folder. The selected windows of the median filter (81 for large stripes, 31 for others) may be overkill for good quality detectors. You should change these paramaters to suit your data.
 
 Features
 ========
