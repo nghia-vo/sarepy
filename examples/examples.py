@@ -19,15 +19,19 @@
 # remove stripe artifacts, and perform reconstruction.
 #============================================================================
 
+import sys
+sys.path.insert(0, "C:/sarepy-master/")
+
 import os
 import numpy as np
-import prep.autocentering as cen
-import losa.loadersaver as losa
-import reco.reconstruction as rec
 
-import prep.stripe_removal_original as srm1
-import prep.stripe_removal_improved as srm2
-import prep.stripe_removal_former as srm3
+import sarepy.losa.loadersaver as losa
+import sarepy.prep.autocentering as cen
+import sarepy.reco.reconstruction as rec
+
+import sarepy.prep.stripe_removal_original as srm1
+import sarepy.prep.stripe_removal_improved as srm2
+import sarepy.prep.stripe_removal_former as srm3
 
 
 file_path = "C:/sinogram/sinogram.tif"

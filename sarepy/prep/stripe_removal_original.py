@@ -23,8 +23,13 @@
 # Publication date: 18th October 2018
 #============================================================================
 
+"""
+Module for stripe removal methods proposed in:
+https://doi.org/10.1364/OE.26.028396
+"""
+
 import numpy as np
-from scipy import signal
+from scipy.signal.windows import gaussian
 from scipy.signal import savgol_filter
 from scipy.ndimage import median_filter
 from scipy.ndimage import binary_dilation
@@ -96,14 +101,14 @@ def remove_stripe_based_filtering(sinogram, sigma, size, dim=1):
     sinogram = np.transpose(sinogram)
     sinopad = np.pad(sinogram, ((0, 0), (pad, pad)), mode='reflect')
     (_, ncol) = sinopad.shape
-    window = signal.gaussian(ncol, std=sigma)
+    window = gaussian(ncol, std=sigma)
     listsign = np.power(-1.0, np.arange(ncol))
-    sinosmooth = np.zeros_like(sinogram)
+    sinosmooth = np.copy(sinogram)
     for i, sinolist in enumerate(sinopad):
         # sinosmooth[i] = np.real(
         #     ifft(fft(sinolist*listsign)*window)*listsign)[pad:ncol-pad]
-        sinosmooth[i] = np.real(fft.ifft(fft.fft(
-            sinolist * listsign) * window) * listsign)[pad:ncol - pad]
+        sinosmooth[i] = np.real(
+            fft.ifft(fft.fft(sinolist * listsign) * window) * listsign)[pad:ncol - pad]
     sinosharp = sinogram - sinosmooth
     if dim == 2:
         sinosmooth_cor = median_filter(sinosmooth, (size, size))
@@ -118,10 +123,14 @@ def _2d_window_ellipse(height, width, sigmax, sigmay):
 
     Parameters
     ----------
-    height, width : int
-        Shape of the window.
-    sigmax, sigmay : int
-        Sigmas of the 2D window.
+    height : int
+        Height of the image.
+    width : int
+        Width of the image.
+    sigmax : int
+        Sigma in the x-direction.
+    sigmay : int
+        Sigma in the y-direction.
 
     Returns
     -------
@@ -145,8 +154,10 @@ def _2d_filter(mat, sigmax, sigmay, pad):
     ----------
     mat : float
         2D array.
-    sigmax, sigmay : int
-        Sigmas of the window.
+    sigmax : int
+        Sigma in the x-direction.
+    sigmay : int
+        Sigma in the y-direction.
     pad : int
         Padding for FFT
 
@@ -180,8 +191,10 @@ def remove_stripe_based_fitting(sinogram, order, sigmax, sigmay):
         2D array.
     order : int
         Polynomial fit order.
-    sigmax, sigmay : int
-        Sigmas of the Gaussian window.
+    sigmax : int
+        Sigma of the Gaussian window in the x-direction.
+    sigmay : int
+        Sigma of the Gaussian window in the y-direction.
 
     Returns
     -------
@@ -217,21 +230,21 @@ def detect_stripe(listdata, snr):
         1D binary mask.
     """
     numdata = len(listdata)
-    listsorted = np.sort(listdata)[::-1]  # Descending sort (historical reason)
+    listsorted = np.sort(listdata)
     xlist = np.arange(0, numdata, 1.0)
     ndrop = np.int16(0.25 * numdata)
-    (_slope, _intercept) = np.polyfit(
+    (slope, intercept) = np.polyfit(
         xlist[ndrop:-ndrop - 1], listsorted[ndrop:-ndrop - 1], 1)
-    numt1 = _intercept + _slope * xlist[-1]
-    noiselevel = np.abs(numt1 - _intercept)
-    val1 = np.abs(listsorted[0] - _intercept) / noiselevel
-    val2 = np.abs(listsorted[-1] - numt1) / noiselevel
-    listmask = np.zeros_like(listdata)
-    if (val1 >= snr):
-        upper_thresh = _intercept + noiselevel * snr * 0.5
+    yend = intercept + slope * xlist[-1]
+    noiselevel = np.abs(yend - intercept)
+    val1 = np.abs(listsorted[-1] - yend) / noiselevel
+    val2 = np.abs(intercept - listsorted[0]) / noiselevel
+    listmask = np.zeros(numdata, dtype=np.float32)
+    if val1 >= snr:
+        upper_thresh = yend + noiselevel * snr * 0.5
         listmask[listdata > upper_thresh] = 1.0
-    if (val2 >= snr):
-        lower_thresh = numt1 - noiselevel * snr * 0.5
+    if val2 >= snr:
+        lower_thresh = intercept - noiselevel * snr * 0.5
         listmask[listdata <= lower_thresh] = 1.0
     return listmask
 
@@ -266,7 +279,7 @@ def remove_large_stripe(sinogram, snr, size):
     list2 = np.mean(sinosmooth[ndrop:nrow - ndrop], axis=0)
     listfact = list1 / list2
     listmask = detect_stripe(listfact, snr)
-    listmask = binary_dilation(listmask, iterations=1).astype(listmask.dtype)
+    listmask = np.float32(binary_dilation(listmask, iterations=1))
     matfact = np.tile(listfact, (nrow, 1))
     sinogram = sinogram / matfact
     sino_tran = np.transpose(sinogram)
@@ -313,7 +326,7 @@ def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size):
     listdiff_bck[listdiff_bck == 0.0] = nmean
     listfact = listdiff / listdiff_bck
     listmask = detect_stripe(listfact, snr)
-    listmask = binary_dilation(listmask, iterations=1).astype(listmask.dtype)
+    listmask = np.float32(binary_dilation(listmask, iterations=1))
     listmask[0:2] = 0.0
     listmask[-2:] = 0.0
     listx = np.where(listmask < 1.0)[0]

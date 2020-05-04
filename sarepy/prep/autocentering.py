@@ -28,7 +28,6 @@ Module for calculating center of rotation in parallel-beam tomography.
 """
 
 import numpy as np
-import pyfftw
 import pyfftw.interfaces.scipy_fftpack as fft
 import scipy.ndimage as ndi
 
@@ -37,16 +36,16 @@ def make_mask(height, width, radius):
     """
     Make a binary mask to select coefficients outside the double-wedge region.
     Eq.(3) in https://doi.org/10.1364/OE.22.019078
-    
+
     Parameters
     ----------
     height : int
         Image height.
     width : int
         Image width.
-    radius : int 
+    radius : int
         Radius of an object, in pixel unit.
-    
+
     Returns
     -------
     float
@@ -77,7 +76,7 @@ def coarse_search_based_integer_shift(
     Note:
     1-pixel shift of the 180-360 sinogram is equivalent to 0.5-pixel shift \
     of CoR. Auto-search is limited to the range of [width/4; width - width/4].
-    
+
     Parameters
     ----------
     sino_0_180 : float 
@@ -90,7 +89,7 @@ def coarse_search_based_integer_shift(
         Ratio between a sample and the width of the sinogram. Default value 
         of 0.5 works in most cases (even when the sample is larger than the 
         field_of_view).
-    
+
     Returns
     -------
     float
@@ -128,14 +127,13 @@ def coarse_search_based_integer_shift(
 
 
 def fine_search_based_subpixel_shift(
-    sino_0_180, start_cor, search_radius=4, search_step=0.25,
-        ratio=0.5):
+        sino_0_180, start_cor, search_radius=4, search_step=0.25, ratio=0.5):
     """
     Find center of rotation (CoR) with sub-pixel accuracy by shifting a\
     180-360 sinogram around the coarse CoR. The 180-360 sinogram is made\
     by flipping horizontally a 0-180 sinogram.
     Angular direction is along the axis 0.
-    
+
     Parameters
     ----------
     sino_0_180 : float 
@@ -150,7 +148,7 @@ def fine_search_based_subpixel_shift(
         Ratio between the sample and the width of the sinogram. Default value 
         of 0.5 works in most cases (even when a sample is larger than the 
         field_of_view).
-    
+
     Returns
     -------
     float
@@ -190,7 +188,7 @@ def fine_search_based_subpixel_shift(
 def _downsample(image, dsp_fact0, dsp_fact1):
     """
     Downsample an image by averaging.
-    
+
     Parameters
     ----------
     image : float
@@ -199,7 +197,7 @@ def _downsample(image, dsp_fact0, dsp_fact1):
         Downsampling factor along axis 0.
     dsp_fact1 : int
         Downsampling factor along axis 1.
-    
+
     Returns
     -------
     float
@@ -223,12 +221,12 @@ def find_center_vo(
     Find center of rotation.
     Note: Downsampling is a trade-off solution to reduce computational cost.
     There's a risk of being stuck in a local minimum by doing that.
-    
-    Parameters 
+
+    Parameters
     ----------
     sinogram : float
         Sinogram in the angle range of [0;180].
-    start_cor : float 
+    start_cor : float
         Starting point for searching CoR.
     stop_cor : float
         Ending point for searching CoR.
@@ -237,12 +235,12 @@ def find_center_vo(
     fine_srange : float
         Searching range for finding CoR with sub-pixel accuracy.
     ratio : float
-        Ratio between the sample and the width of the sinogram. Default value 
-        of 0.5 works in most cases (even when a sample is larger than the 
+        Ratio between the sample and the width of the sinogram. Default value
+        of 0.5 works in most cases (even when a sample is larger than the
         field_of_view).
-    dsp : bool 
+    dsp : bool
         Enable/disable downsampling.
-    
+
     Returns
     -------
     float
@@ -260,9 +258,9 @@ def find_center_vo(
         sinogram1 = ndi.gaussian_filter(sinogram, (3, 1), mode='reflect')
         sino_dsp = _downsample(sinogram1, dsp_row, dsp_col)
         fine_srange = max(fine_srange, dsp_col)
-        if start_cor != None:
+        if start_cor is not None:
             start_cor = np.int16(np.floor(1.0 * start_cor / dsp_col))
-        if stop_cor != None:
+        if stop_cor is not None:
             stop_cor = np.int16(np.ceil(1.0 * stop_cor / dsp_col))
         off_set = 0.5 * dsp_col
         raw_cor = coarse_search_based_integer_shift(

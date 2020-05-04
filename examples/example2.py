@@ -20,17 +20,19 @@
 #============================================================================
 
 import sys
-sys.path.insert(0, "C:/home/sarepy/")
+sys.path.insert(0, "C:/sarepy-master/")
+
 import os
 import numpy as np
-import prep.autocentering as cen
-import losa.loadersaver as losa
-import reco.reconstruction as rec
 
-import prep.stripe_removal_original as srm1
+import sarepy.losa.loadersaver as losa
+import sarepy.prep.autocentering as cen
+import sarepy.reco.reconstruction as rec
+
+import sarepy.prep.stripe_removal_original as srm1
 
 
-file_path = "C:/home/sarepy/data/sinogram_360_neutron_image.tif"
+file_path = "C:/sarepy-master/sarepy/data/sinogram_360_neutron_image.tif"
 out_path = "C:/home/reconstruction/"
 
 file_path = file_path.replace("\\", "/")
@@ -40,7 +42,7 @@ _, file_name = os.path.split(file_path)
 # This is a 360-degree sinogram, 16-bit, neutron image.
 sinogram = losa.load_image(file_path)
 # Apply normalization due to the image is 16-bit.
-nmean = np.mean(sinogram[:,0:30])
+nmean = np.mean(sinogram[:, 0:30])
 sinogram = sinogram / nmean
 # Replace values <=0.0
 nmean = np.mean(sinogram)
@@ -55,7 +57,7 @@ if center == 0.0:
 #     center = cen.find_center_vo(
 #         sinogram, ncol // 2 - search_range, ncol // 2 + search_range)
     # Uncomment the following lines if use a 360-degree sinogram
-    center = cen.find_center_vo(sinogram[0:nrow //2 + 1],
+    center = cen.find_center_vo(sinogram[0:nrow // 2 + 1],
                                 ncol // 2 - search_range,
                                 ncol // 2 + search_range)
     print("Center of rotation ---> {}".format(center))
@@ -82,5 +84,4 @@ sinogram = srm1.remove_stripe_based_sorting(sinogram, 5)
 rec_image = rec.recon_gridrec(
     -np.log(sinogram), center, angles=list_angles, ratio=ratio)
 losa.save_image(out_path + "/rec_after_" + file_name, rec_image)
-# Streak artifacts are gone no matter what reconstruction method is used 
-
+# Streak artifacts are gone no matter what reconstruction method is used

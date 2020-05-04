@@ -26,19 +26,25 @@
 # Publication date: 09th October 2019
 #============================================================================
 
+"""
+Module for stripe removal methods proposed in:
+https://doi.org/10.1117/12.2530324
+"""
+
 import numpy as np
-from scipy import signal
+from scipy.signal.windows import gaussian
 #from scipy.fftpack import fft, ifft, fft2, ifft2
 import pyfftw.interfaces.scipy_fftpack as fft
 
-from prep.stripe_removal_original import remove_stripe_based_sorting, \
-    _2d_filter, remove_stripe_based_fitting
+from sarepy.prep.stripe_removal_original import remove_stripe_based_sorting
+from sarepy.prep.stripe_removal_original import remove_stripe_based_fitting
+from sarepy.prep.stripe_removal_original import _2d_filter
 
 
 def remove_stripe_based_filtering_sorting(sinogram, sigma, size, dim=1):
     """
     Combination of algorithm 2 and algorithm 3 in [1].
-    Remove stripes using the filtering and sorting technique.
+    Removing stripes using the filtering and sorting technique.
     Angular direction is along the axis 0.
 
     Parameters
@@ -62,14 +68,14 @@ def remove_stripe_based_filtering_sorting(sinogram, sigma, size, dim=1):
     sinogram = np.transpose(sinogram)
     sinopad = np.pad(sinogram, ((0, 0), (pad, pad)), mode='reflect')
     (_, ncol) = sinopad.shape
-    window = signal.gaussian(ncol, std=sigma)
+    window = gaussian(ncol, std=sigma)
     listsign = np.power(-1.0, np.arange(ncol))
-    sinosmooth = np.zeros_like(sinogram)
+    sinosmooth = np.copy(sinogram)
     for i, sinolist in enumerate(sinopad):
         # sinosmooth[i] = np.real(ifft(fft(
         #     sinolist * listsign) * window) * listsign)[pad:ncol-pad]
-        sinosmooth[i] = np.real(fft.ifft(fft.fft(
-            sinolist * listsign) * window) * listsign)[pad:ncol - pad]
+        sinosmooth[i] = np.real(
+            fft.ifft(fft.fft(sinolist * listsign) * window) * listsign)[pad:ncol - pad]
     sinosharp = sinogram - sinosmooth
     sinosmooth_cor = np.transpose(
         remove_stripe_based_sorting(np.transpose(sinosmooth), size, dim))
@@ -88,8 +94,10 @@ def remove_stripe_based_sorting_fitting(sinogram, order, sigmax, sigmay):
         2D array.
     order : int
         Polynomial fit order.
-    sigmax, sigmay : int
-        Sigmas of the Gaussian window.
+    sigmax : int
+        Sigma of the Gaussian window in the x-direction.
+    sigmay : int
+        Sigma of the Gaussian window in the y-direction.
 
     Returns
     -------

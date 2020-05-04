@@ -34,6 +34,11 @@
 # Publication date:
 #============================================================================
 
+"""
+Module for prior stripe removal methods.
+
+"""
+
 import numpy as np
 from scipy.ndimage import gaussian_filter
 import pywt
@@ -61,6 +66,7 @@ def remove_stripe_based_normalization(sinogram, sigma, num_chunk):
         2D array. Stripe-removed sinogram.
     """
     (nrow, _) = sinogram.shape
+    sinogram = np.copy(sinogram)
     listindex = np.array_split(np.arange(nrow), num_chunk)
     for pos in listindex:
         bindex = pos[0]
@@ -132,7 +138,7 @@ def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
         bindex = pos[0]
         eindex = pos[-1] + 1
         listmean = np.mean(sinogram[bindex:eindex], axis=0)
-        listgrad[1:-1] = - np.diff(listmean, 2)
+        listgrad[1:-1] = (-1) * np.diff(listmean, 2)
         listgrad[0] = listmean[0] - listmean[1]
         listgrad[-1] = listmean[-1] - listmean[-2]
         matgrad[:] = listgrad
@@ -142,7 +148,7 @@ def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
     return np.exp(-sinogram)
 
 
-def create_2d_window(width, height, u0, v0, n):
+def create_2d_window(width, height, u, v, n):
     """
     Create a 2d window used for the fft-based method
 
@@ -150,9 +156,9 @@ def create_2d_window(width, height, u0, v0, n):
     ----------
     height, width : int
         Shape of the window.
-    u0, n : int
+    u,n : int
         To define the shape of 1D Butterworth low-pass filter.
-    v0 : int
+    v : int
         Number of rows (* 2) to be applied the filter.
 
     Returns
@@ -163,15 +169,15 @@ def create_2d_window(width, height, u0, v0, n):
     centerc = np.ceil(width / 2.0) - 1.0
     centerr = np.int16(np.ceil(height / 2.0) - 1)
     listx = np.arange(width) - centerc
-    window1d = 1.0 / (1.0 + np.power(listx / u0, 2 * n))
-    row1 = centerr - np.int16(v0)
-    row2 = centerr + np.int16(v0) + 1
+    window1d = 1.0 / (1.0 + np.power(listx / u, 2 * n))
+    row1 = centerr - np.int16(v)
+    row2 = centerr + np.int16(v) + 1
     window2d = np.ones((height, width), dtype=np.float32)
     window2d[row1:row2] = window1d
     return window2d
 
 
-def remove_stripe_based_fft(sinogram, u0, n, v0, pad):
+def remove_stripe_based_fft(sinogram, u, n, v, pad):
     """
     Remove stripes using the method in [3].
     Angular direction is along the axis 0.
@@ -180,9 +186,9 @@ def remove_stripe_based_fft(sinogram, u0, n, v0, pad):
     ----------
     sinogram : float
         2D array.
-    u0, n : int
+    u,n : int
         To define the shape of 1D Butterworth low-pass filter.
-    v0 : int
+    v : int
         Number of rows (* 2) to be applied the filter.
     pad : int
         Padding for FFT
@@ -196,7 +202,7 @@ def remove_stripe_based_fft(sinogram, u0, n, v0, pad):
         sinogram = np.pad(sinogram, ((pad, pad), (0, 0)), mode='mean')
         sinogram = np.pad(sinogram, ((0, 0), (pad, pad)), mode='edge')
     (nrow, ncol) = sinogram.shape
-    window2d = create_2d_window(ncol, nrow, u0, v0, n)
+    window2d = create_2d_window(ncol, nrow, u, v, n)
     sinogram = fft.ifft2(
         np.fft.ifftshift(np.fft.fftshift(fft.fft2(sinogram)) * window2d))
     return np.real(sinogram[pad:nrow - pad, pad:ncol - pad])
@@ -209,7 +215,6 @@ def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad):
     Code adapted from tomopy source code https://github.com/tomopy/tomopy
     with a small improvement of using different ways of padding to
     reduce the side effect of the FFT.
-    Angular direction is along the axis 0.
 
     Parameters
     ----------
