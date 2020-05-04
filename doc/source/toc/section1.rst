@@ -22,10 +22,10 @@ artifacts in the sinogram (Fig. 1b), come from two major sources:
 different parts of the system such as the non-linear response of a sensor chip,
 dust on optics components (lens, mirrors…), and especially a scintillator,
 which is the major contributor. Some defects of the scintillator are visible as shown
-in Fig. 2
+in Fig. 2.
 
 .. figure:: section1_figs/fig2.jpg
-  :figwidth: 33 %
+  :figwidth: 50 %
   :align: center
   :figclass: align-center
 
