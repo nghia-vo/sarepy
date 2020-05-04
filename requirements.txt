@@ -1,10 +1,1 @@
 sphinx==2.1.2
-python==3.7
-numpy
-scipy
-pillow
-h5py
-pyfftw
-pywt
-astra
-tomopy
