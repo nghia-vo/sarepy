@@ -34,8 +34,7 @@ extensions = [
             'sphinx.ext.autodoc',
             'sphinx.ext.napoleon',
             'sphinx.ext.intersphinx',
-            'sphinx.ext.viewcode',
-            'rst2pdf.pdfbuilder'
+            'sphinx.ext.viewcode'            
             ]
 
 napoleon_numpy_docstring = True
