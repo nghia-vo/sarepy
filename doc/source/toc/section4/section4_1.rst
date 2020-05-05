@@ -71,7 +71,7 @@ basic data processing modules are added to Sarepy.
 **Tomographic reconstruction**
   This module is a wrapper of reconstruction methods distributed with the `Tomopy <https://tomopy.readthedocs.io/>`_
   and `Astra toolbox <https://www.astra-toolbox.com/>`_ package.
-  If you use a 360_degree sinogram, remember to past the angles.
+  If you use a 360_degree sinogram, remember to pass the angles.
 
   .. code-block:: py
 
