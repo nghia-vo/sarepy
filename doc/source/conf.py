@@ -1,3 +1,9 @@
+import mock
+ 
+MOCK_MODULES = ['numpy', 'scipy', 'pillow', 'h5py', 'pyfftw','pywt','astra','tomopy']
+for mod_name in MOCK_MODULES:
+sys.modules[mod_name] = mock.Mock()
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
