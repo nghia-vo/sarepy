@@ -23,9 +23,8 @@ Clone or download the codes to your local machine, then insert the following two
 import sys  
 sys.path.insert(0, "path-to-sarepy-pck")
 ```
-make sure that the python libs in the requirements.txt are installed before use.  
-Details of how to use the methods can be found in /examples/examples.py.  
-Noting that parameters chosen in these examples are for the sinograms in the /data folder. The selected windows of the median filter (81 for large stripes, 31 for others) may be overkill for good quality detectors. You should change these paramaters to suit your data.
+Making sure that the python libs in the requirements.txt are installed before use.  
+Details of how to use the methods can be found in /examples/examples.py. Noting that parameters chosen in these examples are for the sinograms in the /data folder. The selected windows of the median filter (81 for large stripes, 31 for others) may be overkill for good quality detectors. You should change these paramaters to suit your data.
 
 Features
 ========
@@ -35,8 +34,16 @@ Features
 - Implementations of former methods: a regularization-based method, a normalization-based method, a fft-based method, and a wavelet-fft-based method. 
 - Matlab translation of algorithms 3,4,5,6.
 - Implementations of a basic pipeline of tomography reconstruction: data loading, automated determination of center of rotation, ring artifact removal, tomographic reconstruction, and data saving.
+- Postprocessing methods for removing ring artifacts: polar tranformation, fft-based methods.
 
 Update Notes
 ------------
-- 09/10/2019: Add methods for loading and saving data (from vounwarp), methods for calculating center of rotation, wrappers of reconstruction methods (from tomopy and astra). This allows users to try or test ring removal methods easily.
-- 11/02/2020: Allow to use 2D kernel in the median filter of the sorting-based correction methods. This is done based on feedbacks from neutron imaging users. Note that this increases the computational cost. Add some sinograms for testing.
+- 09/10/2019:  
+   Add methods for loading and saving data (from vounwarp), methods for calculating center of rotation, wrappers of reconstruction methods (from tomopy and astra). This allows users to try or test ring removal methods easily.
+- 11/02/2020:  
+   Allow to use 2D kernel in the median filter of the sorting-based correction methods. This is done based on feedbacks from neutron imaging users. Note that this increases the computational cost.  
+   Add some sinograms for testing.
+- 05/05/2020:  
+   Publish documentation on readthedocs.  
+   Add postprocessing methods.
+   
