@@ -1,1 +1,9 @@
-sphinx==2.1.2
+python
+numpy
+scipy
+pillow
+h5py
+pyfftw
+pywt
+astra
+tomopy
