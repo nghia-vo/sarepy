@@ -10,4 +10,4 @@ python:
    install:
       - requirements: doc/requirements.txt
 
-formats: all
+formats: []
