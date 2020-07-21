@@ -4,6 +4,6 @@ scipy
 pillow
 h5py
 pyfftw
-pywt
+pywavelets
 astra
 tomopy
