@@ -36,6 +36,11 @@ Features
 - Implementations of a basic pipeline of tomography reconstruction: data loading, automated determination of center of rotation, ring artifact removal, tomographic reconstruction, and data saving.
 - Postprocessing methods for removing ring artifacts: polar tranformation, fft-based methods.
 
+Documentation
+=============
+- https://sarepy.readthedocs.io/
+
+
 Update Notes
 ------------
 - 09/10/2019:  
