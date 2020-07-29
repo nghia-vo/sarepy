@@ -232,7 +232,7 @@ def detect_stripe(listdata, snr):
     numdata = len(listdata)
     listsorted = np.sort(listdata)
     xlist = np.arange(0, numdata, 1.0)
-    ndrop = np.int16(0.25 * numdata)
+    ndrop = int(0.25 * numdata)
     (slope, intercept) = np.polyfit(
         xlist[ndrop:-ndrop - 1], listsorted[ndrop:-ndrop - 1], 1)
     yend = intercept + slope * xlist[-1]
@@ -272,7 +272,7 @@ def remove_large_stripe(sinogram, snr, size):
     """
     badpixel_ratio = 0.05
     (nrow, ncol) = sinogram.shape
-    ndrop = np.int16(badpixel_ratio * nrow)
+    ndrop = int(badpixel_ratio * nrow)
     sinosort = np.sort(sinogram, axis=0)
     sinosmooth = median_filter(sinosort, (1, size))
     list1 = np.mean(sinosort[ndrop:nrow - ndrop], axis=0)
