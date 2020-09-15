@@ -51,4 +51,6 @@ Update Notes
 - 05/05/2020:  
    Publish documentation on readthedocs.  
    Add postprocessing methods.
+- 15/09/2020:
+   Add an interpolation-based stripe removal method. It is a combination of algorithm 4, 5, and 6 in https://doi.org/10.1364/OE.26.028396
    
