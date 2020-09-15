@@ -261,7 +261,7 @@ def remove_large_stripe(sinogram, snr, size):
     sinogram : float
         2D array.
     snr : float
-        Ratio used to segment between useful information and noise.
+        Ratio used to segment stripes from background.
     size : int
         Window size of the median filter.
 

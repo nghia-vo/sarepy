@@ -32,14 +32,17 @@ https://doi.org/10.1117/12.2530324
 """
 
 import numpy as np
+from scipy import interpolate
 from scipy.signal.windows import gaussian
+from scipy.ndimage import median_filter
+from scipy.ndimage import binary_dilation
 #from scipy.fftpack import fft, ifft, fft2, ifft2
 import pyfftw.interfaces.scipy_fftpack as fft
 
 from sarepy.prep.stripe_removal_original import remove_stripe_based_sorting
 from sarepy.prep.stripe_removal_original import remove_stripe_based_fitting
 from sarepy.prep.stripe_removal_original import _2d_filter
-
+from sarepy.prep.stripe_removal_original import detect_stripe
 
 def remove_stripe_based_filtering_sorting(sinogram, sigma, size, dim=1):
     """
@@ -147,3 +150,49 @@ def remove_stripe_based_2d_filtering_sorting(sinogram, sigma, size, dim=1):
     sinosharp = sinogram - sinosmooth
     sino_cor = remove_stripe_based_sorting(sinosharp, size, dim)
     return sinosmooth + sino_cor
+
+
+def remove_stripe_based_interpolation(sinogram, snr, size):
+    """
+    Combination of algorithm 4, 5, and 6 in Ref. [1].
+    Remove stripes using a detection technique and an interpolation method.
+    Angular direction is along the axis 0.
+
+    Parameters
+    ----------
+    sinogram : float
+        2D array.
+    snr : float
+        Ratio used to segment between useful information (stripe artifacts)
+        and noise (background).
+    size : int
+        Window size of the median filter.
+
+    Returns
+    -------
+    float
+        2D array. Stripe-removed sinogram.
+    """
+    badpixel_ratio = 0.05
+    (nrow, ncol) = sinogram.shape
+    ndrop = int(badpixel_ratio * nrow)
+    sinosort = np.sort(sinogram, axis=0)
+    sinosmooth = median_filter(sinosort, (1, size))
+    list1 = np.mean(sinosort[ndrop:nrow - ndrop], axis=0)
+    list2 = np.mean(sinosmooth[ndrop:nrow - ndrop], axis=0)
+    listfact = list1 / list2
+    listmask = detect_stripe(listfact, snr)
+    listmask = np.float32(binary_dilation(listmask, iterations=1))
+    matfact = np.tile(listfact, (nrow, 1))
+    sinogram = 1.0 * sinogram / matfact
+    listmask[0:2] = 0.0
+    listmask[-2:] = 0.0
+    listx = np.where(listmask < 1.0)[0]
+    listy = np.arange(nrow)
+    matz = sinogram[:, listx]
+    finter = interpolate.interp2d(listx, listy, matz, kind='linear')
+    listxmiss = np.where(listmask > 0.0)[0]
+    if len(listxmiss) > 0:
+        matzmiss = finter(listxmiss, listy)
+        sinogram[:, listxmiss] = matzmiss
+    return sinogram

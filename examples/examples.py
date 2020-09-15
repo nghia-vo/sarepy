@@ -98,6 +98,7 @@ sinogram = srm1.remove_all_stripe(sinogram, 3.0, 81, 31)
 # sinogram = srm2.remove_stripe_based_2d_filtering_sorting(sinogram, 10, 31)
 # sinogram = srm2.remove_stripe_based_filtering_sorting(sinogram, 3, 31)
 # sinogram = srm2.remove_stripe_based_sorting_fitting(sinogram, 1, 10, 60)
+# sinogram = srm2.remove_stripe_based_interpolation(sinogram, 3.0, 31)
 
 # Using former methods
 
