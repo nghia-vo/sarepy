@@ -1,5 +1,5 @@
 ***********************************
-Methods for removing ring artifacts
+Methods of removing ring artifacts
 ***********************************
 
 Preprocessing methods

@@ -273,19 +273,3 @@ def find_center_vo(
         fine_cor = fine_search_based_subpixel_shift(
             sinogram, raw_cor, fine_srange, step_cor, ratio)
     return fine_cor
-
-# #---------------------------------------------------------------------------
-# #Example of use
-# import multiprocessing
-# num_cpu = multiprocessing.cpu_count()
-# pyfftw.config.NUM_THREADS = num_cpu - 1
-# pyfftw.interfaces.cache.enable()
-# pyfftw.interfaces.cache.set_keepalive_time(10.0)
-# #---------------------------------------------------------------------------
-# #Example 1: Use default parameters
-# cor = find_center_vo(sinogram)
-# #----------------------------------------------------------------------------
-# Example 2: Searching around the horizontal center of a sinogram.
-# search_range = 50
-# (nrow, ncol) = sinogram.shape
-# cor = find_center_vo(sinogram, ncol//2-search_range, ncol//2+search_range)

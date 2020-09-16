@@ -20,11 +20,11 @@ Detailed implementations of the method is shown as follows.
 
   Figure 1. (a) Sinograms with large stripe artifacts. (b) Reconstructed image.
 
-**Python source code:**
+**Python source code**
 
   .. autofunction:: sarepy.prep.stripe_removal_original.remove_large_stripe
 
-**How it works:**
+**How it works**
 
   1 - Locating stripe artifacts
     -- Sort intensities in each column of the sinogram (Fig. 2(a)). Apply the
@@ -96,7 +96,7 @@ Detailed implementations of the method is shown as follows.
 
       Figure 7. (a) Corrected sinogram. (b) Reconstructed image from sinogram (a).
 
-**How to use:**
+**How to use**
 
   -- The *snr* parameter controls the sensitivity of the stripe detection
   method. Smaller is more sensitive. Recommended values: 1.1 -> 3.0. |br|
@@ -107,6 +107,6 @@ Detailed implementations of the method is shown as follows.
   without degrading the final image too much. This allows users
   to use the same parameters across sinograms.
 
-**How to improve:**
+**How to improve**
 
   The median filter can be replaced by another edge-preserving smoothing filter.

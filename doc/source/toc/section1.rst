@@ -51,7 +51,7 @@ scintillator.
   varied by rotating an X-ray attenuator. (b) Intercepts of the fitting results.
   (c) Slopes of the fitting results.
 
-The retrieved response maps are useful to characterize the detector system and can
+Retrieved response maps are useful to characterize a detector system and can
 be used to correct the irregular response of large size detectors where the response
 of each pixel is quite independent. However, in synchrotron-based microtomography
 systems, where scintillators are mainly unstructured types to achieve high
@@ -64,7 +64,7 @@ scintillation photons as can be seen in Fig. 4.
   :align: center
   :figclass: align-center
 
-  Figure 4. Demonstration of the scattering of scintillation photons in the
+  Figure 4. Demonstration of the scattering of scintillation photons in a
   scintillator-coupled X-ray detector by taking a flat-field image with a half
   field of view blocked. (a) Under 0.05s of exposure time. (b) Under 0.5s of
   exposure time.
@@ -92,7 +92,7 @@ artifacts in sample 3 which don't occur in sample 1 and 2.
   :align: center
   :figclass: align-center
 
-  Figure 6. Occurrence of the ring artifacts is sample-dependent as can be seen
+  Figure 6. Occurrence of ring artifacts is sample-dependent as can be seen
   in the reconstructed images of three samples at the same detector row. (a) Sample
   1. (b) Sample 2. (c) Sample 3.
 
@@ -112,10 +112,10 @@ in practice, it is done using the following formula
 where :math:`P_{\theta}` is a projection image of a sample at a rotation
 angle of :math:`\theta`, :math:`D` is a dark-field image taken with a photon
 source off, and :math:`F` is a flat-field image taken without the sample.
-This process is applied to all projections and it is here that the fixed features
-in the flat-field image which are uncorrelated to projection images give
+This process is applied to all projections and it is here that fixed features
+in a flat-field image which are uncorrelated to projection images give
 rise to stripe artifacts in sinograms or ring artifacts in reconstructed
-images. Figure 7 shows two types of fixed features which can be found in the
+images. Figure 7 shows two types of fixed features which can be found in
 flat-field images. The first one is zingers caused by scattered x-rays
 hitting the CCD chip directly (Fig. 7(a)). The second one is blobs
 (Fig. 7(b)) introduced by X-ray optics components in a synchrotron-based tomography system.

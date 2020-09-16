@@ -43,7 +43,7 @@ def cirle_mask(width, ratio):
 
     Returns
     ------
-    float
+    ndarray
          Square array.
     """
     mask = np.zeros((width, width), dtype=np.float32)
@@ -72,9 +72,9 @@ def reg_to_polar(width_reg, height_reg, width_pol, height_pol):
 
     Returns
     ------
-    x_mat : float
+    x_mat : ndarray
          2D array. Broadcast of the x-coordinates.
-    y_mat : float
+    y_mat : ndarray
          2D array. Broadcast of the y-coordinates.
 
     """
@@ -108,9 +108,9 @@ def polar_to_reg(width_pol, height_pol, width_reg, height_reg):
 
     Returns
     ------
-    r_mat : float
+    r_mat : ndarray
          2D array. Broadcast of the r-coordinates.
-    theta_mat : float
+    theta_mat : ndarray
          2D array. Broadcast of the theta-coordinates.
 
     """
@@ -135,16 +135,16 @@ def mapping(mat, xmat, ymat):
 
     Parameters
     ----------
-    mat : float
+    mat : array_like
         2D array.
-    xmat : float
+    xmat : array_like
         2D array of the x-coordinates.
-    ymat : float
+    ymat : array_like
         2D array of the y-coordinates.
 
     Returns
     -------
-    float
+    ndarray
         2D array.
     """
     indices = np.reshape(ymat, (-1, 1)), np.reshape(xmat, (-1, 1))
@@ -155,11 +155,11 @@ def mapping(mat, xmat, ymat):
 def ring_removal_based_wavelet_fft(mat, level=5, sigma=1.0, order=8, pad=150):
     """
     Remove ring artifacts in the reconstructed image by combining the polar
-    transform and the wavelet-fft-based method.
+    transform and the wavelet-fft-based method (Ref. [1]).
 
     Parameters
     ----------
-    mat : float
+    mat : array_like
         Square array. Reconstructed image
     level : int
         Wavelet decomposition level.
@@ -172,8 +172,13 @@ def ring_removal_based_wavelet_fft(mat, level=5, sigma=1.0, order=8, pad=150):
 
     Returns
     -------
-    float
+    ndarray
         Square array. Ring-removed image.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.17.008567
+
     """
     (nrow, ncol) = mat.shape
     if nrow != ncol:
@@ -192,11 +197,11 @@ def ring_removal_based_wavelet_fft(mat, level=5, sigma=1.0, order=8, pad=150):
 def ring_removal_based_fft(mat, u=30, n=8, v=1, pad=150):
     """
     Remove ring artifacts in the reconstructed image by combining the polar
-    transform and the fft-based method.
+    transform and the fft-based method (Ref. [1]).
 
     Parameters
     ----------
-    mat : float
+    mat : array_like
         Square array. Reconstructed image
     u,n : int
         To define the shape of 1D Butterworth low-pass filter.
@@ -207,8 +212,12 @@ def ring_removal_based_fft(mat, u=30, n=8, v=1, pad=150):
 
     Returns
     -------
-    float
+    ndarray
         Square array. Ring-removed image.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1063/1.1149043
     """
     (nrow, ncol) = mat.shape
     if nrow != ncol:

@@ -42,18 +42,18 @@ Module for prior stripe removal methods.
 import numpy as np
 from scipy.ndimage import gaussian_filter
 import pywt
+# import scipy.fftpack as fft
 import pyfftw.interfaces.scipy_fftpack as fft
-# from scipy.fftpack import fft, ifft, fft2, ifft2
 
 
 def remove_stripe_based_normalization(sinogram, sigma, num_chunk):
     """
-    Remove stripes using the method in [1].
+    Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D array.
     sigma : int
         Sigma of the Gaussian window.
@@ -62,8 +62,12 @@ def remove_stripe_based_normalization(sinogram, sigma, num_chunk):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://www.mcs.anl.gov/research/projects/X-ray-cmt/rivers/tutorial.html
     """
     (nrow, _) = sinogram.shape
     sinogram = np.copy(sinogram)
@@ -82,7 +86,7 @@ def remove_stripe_based_normalization(sinogram, sigma, num_chunk):
 def calculate_reg_mat(width, alpha):
     """
     Calculate coefficients used for the regularization-based method.
-    Eq. (7) in [2].
+    Eq. (7) in Ref. [1].
 
     Parameters
     ----------
@@ -93,8 +97,12 @@ def calculate_reg_mat(width, alpha):
 
     Returns
     -------
-    float
+    ndarray
          Square array.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1016/j.aml.2010.08.022
     """
     tau = 2.0 * np.arcsinh(np.sqrt(alpha) * 0.5)
     ilist = np.arange(0, width)
@@ -111,12 +119,12 @@ def calculate_reg_mat(width, alpha):
 
 def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
     """
-    Remove stripes using the method in [2].
+    Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D array.
     alpha : float
         Regularization parameter.
@@ -125,8 +133,12 @@ def remove_stripe_based_regularization(sinogram, alpha, num_chunk):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1016/j.aml.2010.08.022
     """
     sinogram = -np.log(sinogram)
     (nrow, ncol) = sinogram.shape
@@ -163,7 +175,7 @@ def create_2d_window(width, height, u, v, n):
 
     Returns
     -------
-    float
+    ndarray
         2D array.
     """
     centerc = np.ceil(width / 2.0) - 1.0
@@ -179,12 +191,12 @@ def create_2d_window(width, height, u, v, n):
 
 def remove_stripe_based_fft(sinogram, u, n, v, pad):
     """
-    Remove stripes using the method in [3].
+    Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D array.
     u,n : int
         To define the shape of 1D Butterworth low-pass filter.
@@ -195,8 +207,12 @@ def remove_stripe_based_fft(sinogram, u, n, v, pad):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1063/1.1149043
     """
     if pad > 0:
         sinogram = np.pad(sinogram, ((pad, pad), (0, 0)), mode='mean')
@@ -210,15 +226,12 @@ def remove_stripe_based_fft(sinogram, u, n, v, pad):
 
 def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad):
     """
-    Remove stripes using the method in [4].
+    Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.
-    Code adapted from tomopy source code https://github.com/tomopy/tomopy
-    with a small improvement of using different ways of padding to
-    reduce the side effect of the FFT.
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D array.
     level : int
         Wavelet decomposition level.
@@ -231,8 +244,18 @@ def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    Notes
+    -----
+    Code adapted from tomopy source code https://github.com/tomopy/tomopy
+    with a small improvement of using different ways of padding to
+    reduce the side effect of the Fourier transform.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.17.008567
     """
     (nrow, ncol) = sinogram.shape
     if pad > 0:

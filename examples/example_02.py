@@ -75,7 +75,7 @@ rec_image = rec.recon_astra(
 losa.save_image(out_path + "/rec_fbp_before_" + file_name, rec_image)
 
 # Apply ring artifact methods.
-# Parameters used are much smaller than these used in examples.py.
+# Parameters used are much smaller than these used in example_01.py.
 sinogram = srm1.remove_unresponsive_and_fluctuating_stripe(sinogram, 3.0, 31)
 sinogram = srm1.remove_stripe_based_sorting(sinogram, 5)
 

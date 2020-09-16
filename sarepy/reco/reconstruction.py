@@ -42,7 +42,7 @@ def cirle_mask(width, ratio):
 
     Returns
     -------
-    float
+    ndarray
         Square array.
     """
     mask = np.zeros((width, width), dtype=np.float32)
@@ -62,7 +62,7 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0,
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D tomographic data.
     center : float
         Center of rotation.
@@ -83,7 +83,7 @@ def recon_astra(sinogram, center, angles=None, ratio=1.0,
 
     Returns
     -------
-    float
+    ndarray
         Square array.
     """
     if pad > 0:
@@ -128,7 +128,7 @@ def recon_gridrec(sinogram, center, angles=None, ratio=1.0):
 
     Parameters
     ----------
-    sinogram : float
+    sinogram : array_like
         2D tomographic data.
     center : float
         Center of rotation.
@@ -139,7 +139,7 @@ def recon_gridrec(sinogram, center, angles=None, ratio=1.0):
 
     Returns
     -------
-    float
+    ndarray
         Square array.
     """
     (nrow, _) = sinogram.shape

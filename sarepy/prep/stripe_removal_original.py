@@ -35,20 +35,19 @@ from scipy.ndimage import median_filter
 from scipy.ndimage import binary_dilation
 from scipy.ndimage import uniform_filter1d
 from scipy import interpolate
-#from scipy.fftpack import fft, ifft, fft2, ifft2
+# import scipy.fftpack as fft
 import pyfftw.interfaces.scipy_fftpack as fft
 
 
 def remove_stripe_based_sorting(sinogram, size, dim=1):
     """
-    Algorithm 3 in the paper. Remove stripes using the sorting technique.
-    Work particularly well for removing partial stripes.
-    Angular direction is along the axis 0.
+    Remove stripe artifacts in a sinogram using the sorting technique,
+    algorithm 3 in Ref. [1]. Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array
+    sinogram : array_like
+        2D array. Sinogram image.
     size : int
         Window size of the median filter.
     dim : {1, 2}, optional
@@ -56,34 +55,38 @@ def remove_stripe_based_sorting(sinogram, size, dim=1):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
     sinogram = np.transpose(sinogram)
     (nrow, ncol) = sinogram.shape
-    listindex = np.arange(0.0, ncol, 1.0)
-    matindex = np.tile(listindex, (nrow, 1))
-    matcomb = np.asarray(np.dstack((matindex, sinogram)))
-    matsort = np.asarray(
-        [row[row[:, 1].argsort()] for row in matcomb])
+    list_index = np.arange(0.0, ncol, 1.0)
+    mat_index = np.tile(list_index, (nrow, 1))
+    mat_comb = np.asarray(np.dstack((mat_index, sinogram)))
+    mat_sort = np.asarray(
+        [row[row[:, 1].argsort()] for row in mat_comb])
     if dim == 2:
-        matsort[:, :, 1] = median_filter(matsort[:, :, 1], (size, size))
+        mat_sort[:, :, 1] = median_filter(mat_sort[:, :, 1], (size, size))
     else:
-        matsort[:, :, 1] = median_filter(matsort[:, :, 1], (size, 1))
-    matsortback = np.asarray(
-        [row[row[:, 0].argsort()] for row in matsort])
-    return np.transpose(matsortback[:, :, 1])
+        mat_sort[:, :, 1] = median_filter(mat_sort[:, :, 1], (size, 1))
+    mat_sort_back = np.asarray(
+        [row[row[:, 0].argsort()] for row in mat_sort])
+    return np.transpose(mat_sort_back[:, :, 1])
 
 
 def remove_stripe_based_filtering(sinogram, sigma, size, dim=1):
     """
-    Algorithm 2 in the paper. Remove stripes using the filtering technique.
-    Angular direction is along the axis 0.
+    Remove stripe artifacts in a sinogram using the filtering technique,
+    algorithm 2 in Ref. [1]. Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array.
+    sinogram : array_like
+        2D array. Sinogram image
     sigma : int
         Sigma of the Gaussian window used to separate the low-pass and
         high-pass components of the intensity profile of each column.
@@ -94,30 +97,32 @@ def remove_stripe_based_filtering(sinogram, sigma, size, dim=1):
 
     Returns
     -------
-    float
+    array_like
          2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
-    pad = 150  # To reduce artifacts caused by FFT
+    pad = min(150, int(0.1 * sinogram.shape[0]))
     sinogram = np.transpose(sinogram)
-    sinopad = np.pad(sinogram, ((0, 0), (pad, pad)), mode='reflect')
-    (_, ncol) = sinopad.shape
+    sino_pad = np.pad(sinogram, ((0, 0), (pad, pad)), mode='reflect')
+    (_, ncol) = sino_pad.shape
     window = gaussian(ncol, std=sigma)
-    listsign = np.power(-1.0, np.arange(ncol))
-    sinosmooth = np.copy(sinogram)
-    for i, sinolist in enumerate(sinopad):
-        # sinosmooth[i] = np.real(
-        #     ifft(fft(sinolist*listsign)*window)*listsign)[pad:ncol-pad]
-        sinosmooth[i] = np.real(
-            fft.ifft(fft.fft(sinolist * listsign) * window) * listsign)[pad:ncol - pad]
-    sinosharp = sinogram - sinosmooth
+    list_sign = np.power(-1.0, np.arange(ncol))
+    sino_smooth = np.copy(sinogram)
+    for i, sino_1d in enumerate(sino_pad):
+        sino_smooth[i] = np.real(
+            fft.ifft(fft.fft(sino_1d * list_sign) * window) * list_sign)[pad:ncol - pad]
+    sino_sharp = sinogram - sino_smooth
     if dim == 2:
-        sinosmooth_cor = median_filter(sinosmooth, (size, size))
+        sino_smooth_cor = median_filter(sino_smooth, (size, size))
     else:
-        sinosmooth_cor = median_filter(sinosmooth, (size, 1))
-    return np.transpose(sinosmooth_cor + sinosharp)
+        sino_smooth_cor = median_filter(sino_smooth, (size, 1))
+    return np.transpose(sino_smooth_cor + sino_sharp)
 
 
-def _2d_window_ellipse(height, width, sigmax, sigmay):
+def make_2d_gaussian_window(height, width, sigmax, sigmay):
     """
     Create a 2D Gaussian window.
 
@@ -134,61 +139,58 @@ def _2d_window_ellipse(height, width, sigmax, sigmay):
 
     Returns
     -------
-    window : float
+    ndarray
         2D array.
     """
-    centerx = (width - 1.0) / 2.0
-    centery = (height - 1.0) / 2.0
-    y, x = np.ogrid[-centery:height - centery, -centerx:width - centerx]
-    numx = 2.0 * sigmax * sigmax
-    numy = 2.0 * sigmay * sigmay
-    window = np.exp(-(x * x / numx + y * y / numy))
+    xcenter = (width - 1.0) / 2.0
+    ycenter = (height - 1.0) / 2.0
+    y, x = np.ogrid[-ycenter:height - ycenter, -xcenter:width - xcenter]
+    window = np.exp(-(x ** 2 / (2 * sigmax ** 2) + y ** 2 / (2 * sigmay ** 2)))
     return window
 
 
-def _2d_filter(mat, sigmax, sigmay, pad):
+def apply_gaussian_filter(mat, sigmax, sigmay, pad):
     """
     Filtering an image using a 2D Gaussian window.
 
     Parameters
     ----------
-    mat : float
+    mat : array_like
         2D array.
     sigmax : int
         Sigma in the x-direction.
     sigmay : int
         Sigma in the y-direction.
     pad : int
-        Padding for FFT
+        Padding for the Fourier transform.
 
     Returns
     -------
-    mat_filt : float
+    ndarray
         2D array. Filtered image.
     """
-    matpad = np.pad(mat, ((0, 0), (pad, pad)), mode='edge')
-    matpad = np.pad(matpad, ((pad, pad), (0, 0)), mode='mean')
-    (nrow, ncol) = matpad.shape
-    win2d = _2d_window_ellipse(nrow, ncol, sigmax, sigmay)
+    mat_pad = np.pad(mat, ((0, 0), (pad, pad)), mode='edge')
+    mat_pad = np.pad(mat_pad, ((pad, pad), (0, 0)), mode='mean')
+    (nrow, ncol) = mat_pad.shape
+    window = make_2d_gaussian_window(nrow, ncol, sigmax, sigmay)
     listx = np.arange(0, ncol)
     listy = np.arange(0, nrow)
     x, y = np.meshgrid(listx, listy)
-    matsign = np.power(-1.0, x + y)
-    # mat_filt = np.real(ifft2(fft2(matpad * matsign) * win2d) * matsign)
+    mat_sign = np.power(-1.0, x + y)
     mat_filt = np.real(
-        fft.ifft2(fft.fft2(matpad * matsign) * win2d) * matsign)
+        fft.ifft2(fft.fft2(mat_pad * mat_sign) * window) * mat_sign)
     return mat_filt[pad:nrow - pad, pad:ncol - pad]
 
 
 def remove_stripe_based_fitting(sinogram, order, sigmax, sigmay):
     """
-    Algorithm 1 in the paper. Remove stripes using the fitting technique.
+    Remove stripes using the fitting technique, algorithm 1 in Ref. [1].
     Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array.
+    sinogram : array_like
+        2D array. Sinogram image
     order : int
         Polynomial fit order.
     sigmax : int
@@ -198,184 +200,207 @@ def remove_stripe_based_fitting(sinogram, order, sigmax, sigmay):
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
     (nrow, _) = sinogram.shape
+    pad = min(150, int(0.1 * sinogram.shape[0]))
     nrow1 = nrow
     if nrow1 % 2 == 0:
         nrow1 = nrow1 - 1
-    sinofit = savgol_filter(sinogram, nrow1, order, axis=0, mode='mirror')
-    sinofit_smooth = _2d_filter(sinofit, sigmax, sigmay, 50)
-    num1 = np.mean(sinofit)
-    num2 = np.mean(sinofit_smooth)
-    sinofit_smooth = num1 * sinofit_smooth / num2
-    return sinogram / sinofit * sinofit_smooth
+    sino_fit = savgol_filter(sinogram, nrow1, order, axis=0, mode='mirror')
+    sino_fit_smooth = apply_gaussian_filter(sino_fit, sigmax, sigmay, pad)
+    num1 = np.mean(sino_fit)
+    num2 = np.mean(sino_fit_smooth)
+    sino_fit_smooth = num1 * sino_fit_smooth / num2
+    return (sinogram / sino_fit) * sino_fit_smooth
 
 
-def detect_stripe(listdata, snr):
+def detect_stripe(list_data, snr):
     """
-    Algorithm 4 in the paper. Used to locate stripe positions.
+    Locate stripe positions using Algorithm 4 in Ref. [1].
 
     Parameters
     ----------
-    listdata : float
-        1D normalized array.
+    list_data : array_like
+        1D array. Normalized data.
     snr : float
-        Ratio used to segment between useful information and noise.
+        Ratio used to segment stripes from background noise.
 
     Returns
     -------
-    listmask : float
+    ndarray
         1D binary mask.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
-    numdata = len(listdata)
-    listsorted = np.sort(listdata)
-    xlist = np.arange(0, numdata, 1.0)
-    ndrop = int(0.25 * numdata)
-    (slope, intercept) = np.polyfit(
-        xlist[ndrop:-ndrop - 1], listsorted[ndrop:-ndrop - 1], 1)
-    yend = intercept + slope * xlist[-1]
-    noiselevel = np.abs(yend - intercept)
-    val1 = np.abs(listsorted[-1] - yend) / noiselevel
-    val2 = np.abs(intercept - listsorted[0]) / noiselevel
-    listmask = np.zeros(numdata, dtype=np.float32)
+    npoint = len(list_data)
+    list_sort = np.sort(list_data)
+    listx = np.arange(0, npoint, 1.0)
+    ndrop = np.int16(0.25 * npoint)
+    (slope, intercept) = np.polyfit(listx[ndrop:-ndrop - 1], list_sort[ndrop:-ndrop - 1], 1)
+    y_end = intercept + slope * listx[-1]
+    noise_level = np.abs(y_end - intercept)
+    val1 = np.abs(list_sort[-1] - y_end) / noise_level
+    val2 = np.abs(intercept - list_sort[0]) / noise_level
+    list_mask = np.zeros(npoint, dtype=np.float32)
     if val1 >= snr:
-        upper_thresh = yend + noiselevel * snr * 0.5
-        listmask[listdata > upper_thresh] = 1.0
+        upper_thresh = y_end + noise_level * snr * 0.5
+        list_mask[list_data > upper_thresh] = 1.0
     if val2 >= snr:
-        lower_thresh = intercept - noiselevel * snr * 0.5
-        listmask[listdata <= lower_thresh] = 1.0
-    return listmask
+        lower_thresh = intercept - noise_level * snr * 0.5
+        list_mask[list_data <= lower_thresh] = 1.0
+    return list_mask
 
 
-def remove_large_stripe(sinogram, snr, size):
+def remove_large_stripe(sinogram, snr, size, drop_ratio=0.1, norm=True):
     """
-    Algorithm 5 in the paper. Remove large stripes by: locating stripes,
-    normalizing to remove full stripes, using the sorting technique to
-    remove partial stripes.
-    Angular direction is along the axis 0.
+    Remove large stripes, algorithm 5 in Ref. [1], by: locating stripes, normalizing
+    to remove full stripes, and using the sorting technique (Ref. [1]) to remove partial
+    stripes. Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array.
+    sinogram : array_like
+        2D array. Sinogram image
     snr : float
-        Ratio used to segment stripes from background.
+        Ratio used to segment stripes from background noise.
     size : int
         Window size of the median filter.
+    drop_ratio : float, optional
+        Ratio of pixels to be dropped, which is used to to reduce
+        the possibility of the false detection of stripes.
+    norm : bool, optional
+        Apply normalization if True.
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
-    badpixel_ratio = 0.05
+    drop_ratio = np.clip(drop_ratio, 0.0, 0.8)
     (nrow, ncol) = sinogram.shape
-    ndrop = int(badpixel_ratio * nrow)
-    sinosort = np.sort(sinogram, axis=0)
-    sinosmooth = median_filter(sinosort, (1, size))
-    list1 = np.mean(sinosort[ndrop:nrow - ndrop], axis=0)
-    list2 = np.mean(sinosmooth[ndrop:nrow - ndrop], axis=0)
-    listfact = list1 / list2
-    listmask = detect_stripe(listfact, snr)
-    listmask = np.float32(binary_dilation(listmask, iterations=1))
-    matfact = np.tile(listfact, (nrow, 1))
-    sinogram = sinogram / matfact
+    ndrop = int(0.5 * drop_ratio * nrow)
+    sino_sort = np.sort(sinogram, axis=0)
+    sino_smooth = median_filter(sino_sort, (1, size))
+    list1 = np.mean(sino_sort[ndrop:nrow - ndrop], axis=0)
+    list2 = np.mean(sino_smooth[ndrop:nrow - ndrop], axis=0)
+    list2[list2 == 0.0] = np.mean(list2)
+    list_fact = list1 / list2
+    list_mask = detect_stripe(list_fact, snr)
+    list_mask = np.float32(binary_dilation(list_mask, iterations=1))
+    mat_fact = np.tile(list_fact, (nrow, 1))
+    if norm is True:
+        sinogram = sinogram / mat_fact  # Normalization
     sino_tran = np.transpose(sinogram)
-    listindex = np.arange(0.0, nrow, 1.0)
-    matindex = np.tile(listindex, (ncol, 1))
-    matcomb = np.asarray(np.dstack((matindex, sino_tran)))
-    matsort = np.asarray(
-        [row[row[:, 1].argsort()] for row in matcomb])
-    matsort[:, :, 1] = np.transpose(sinosmooth)
-    matsortback = np.asarray(
-        [row[row[:, 0].argsort()] for row in matsort])
-    sino_cor = np.transpose(matsortback[:, :, 1])
-    listxmiss = np.where(listmask > 0.0)[0]
-    sinogram[:, listxmiss] = sino_cor[:, listxmiss]
+    list_index = np.arange(0.0, nrow, 1.0)
+    mat_index = np.tile(list_index, (ncol, 1))
+    mat_comb = np.asarray(np.dstack((mat_index, sino_tran)))
+    mat_sort = np.asarray(
+        [row[row[:, 1].argsort()] for row in mat_comb])
+    mat_sort[:, :, 1] = np.transpose(sino_smooth)
+    mat_sort_back = np.asarray(
+        [row[row[:, 0].argsort()] for row in mat_sort])
+    sino_cor = np.transpose(mat_sort_back[:, :, 1])
+    listx_miss = np.where(list_mask > 0.0)[0]
+    sinogram[:, listx_miss] = sino_cor[:, listx_miss]
     return sinogram
 
 
-def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size):
+def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size, residual=False):
     """
-    Algorithm 6 in the paper. Remove unresponsive or fluctuating stripes by:
-    locating stripes, correcting by interpolation.
-    Angular direction is along the axis 0.
+    Remove unresponsive or fluctuating stripes, algorithm 6 in Ref. [1], by:
+    locating stripes, correcting using interpolation. Angular direction
+    is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array.
+    sinogram : array_like
+        2D array. Sinogram image.
     snr : float
-        Ratio used to segment between useful information and noise
+        Ratio used to segment stripes from background noise.
     size : int
         Window size of the median filter.
+    residual : bool, optional
+        Removing residual stripes if True.
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
     sinogram = np.copy(sinogram)  # Make it mutable
     (nrow, _) = sinogram.shape
-    sinosmooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 10)
-    listdiff = np.sum(np.abs(sinogram - sinosmooth), axis=0)
-    nmean = np.mean(listdiff)
-    listdiff_bck = median_filter(listdiff, size)
-    listdiff_bck[listdiff_bck == 0.0] = nmean
-    listfact = listdiff / listdiff_bck
-    listmask = detect_stripe(listfact, snr)
-    listmask = np.float32(binary_dilation(listmask, iterations=1))
-    listmask[0:2] = 0.0
-    listmask[-2:] = 0.0
-    listx = np.where(listmask < 1.0)[0]
+    sino_smooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 10)
+    list_diff = np.sum(np.abs(sinogram - sino_smooth), axis=0)
+    list_diff_bck = median_filter(list_diff, size)
+    nmean = np.mean(np.abs(list_diff_bck))
+    list_diff_bck[list_diff_bck == 0.0] = nmean
+    list_fact = list_diff / list_diff_bck
+    list_mask = detect_stripe(list_fact, snr)
+    list_mask = np.float32(binary_dilation(list_mask, iterations=1))
+    list_mask[0:2] = 0.0
+    list_mask[-2:] = 0.0
+    listx = np.where(list_mask < 1.0)[0]
     listy = np.arange(nrow)
-    matz = sinogram[:, listx]
-    finter = interpolate.interp2d(listx, listy, matz, kind='linear')
-    listxmiss = np.where(listmask > 0.0)[0]
-    if len(listxmiss) > 0:
-        matzmiss = finter(listxmiss, listy)
-        sinogram[:, listxmiss] = matzmiss
-    # Use algorithm 5 to remove residual stripes
-    # sinogram = remove_large_stripe(sinogram, snr, size)
+    mat = sinogram[:, listx]
+    finter = interpolate.interp2d(listx, listy, mat, kind='linear')
+    listx_miss = np.where(list_mask > 0.0)[0]
+    if len(listx_miss) > 0:
+        sinogram[:, listx_miss] = finter(listx_miss, listy)
+    if residual is True:
+        sinogram = remove_large_stripe(sinogram, snr, size)
     return sinogram
 
 
-def remove_all_stripe(sinogram, snr, la_size, sm_size, dim=1):
+def remove_all_stripe(sinogram, snr, la_size, sm_size, drop_ratio=0.1, norm=True, dim=1):
     """
-    Remove all types of stripe artifacts by combining algorithm 6, 5, and 3.
-    Angular direction is along the axis 0.
+    Remove all types of stripe artifacts by combining algorithm 6, 5, 4,
+    and 3 in Ref. [1]. Angular direction is along the axis 0.
 
     Parameters
     ----------
-    sinogram : float
-        2D array.
+    sinogram : array_like
+        2D array. Sinogram image.
     snr : float
-        Ratio used to segment between useful information and noise.
+        Ratio used to segment stripes from background noise.
     la_size : int
         Window size of the median filter to remove large stripes.
     sm_size : int
         Window size of the median filter to remove small-to-medium stripes.
+    drop_ratio : float, optional
+        Ratio of pixels to be dropped, which is used to to reduce
+        the possibility of the false detection of stripes.
+    norm : bool, optional
+        Apply normalization if True.
     dim : {1, 2}, optional
         Dimension of the window.
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
+
+    References
+    ----------
+    .. [1] https://doi.org/10.1364/OE.26.028396
     """
     sinogram = remove_unresponsive_and_fluctuating_stripe(
         sinogram, snr, la_size)
-    sinogram = remove_large_stripe(sinogram, snr, la_size)
+    sinogram = remove_large_stripe(sinogram, snr, la_size, drop_ratio, norm)
     sinogram = remove_stripe_based_sorting(sinogram, sm_size, dim)
     return sinogram
-
-# ----------------------------------------------------------------------------
-# Example of use for a sinogram with w x h ~ 2k x 2k pixel
-# sinogram = remove_stripe_based_sorting(sinogram, 31)
-# sinogram = remove_stripe_based_filtering(sinogram, 3, 31)
-# sinogram = remove_stripe_based_fitting(sinogram, 1, 5, 20)
-# sinogram = remove_unresponsive_and_fluctuating_stripe(sinogram1, 3, 81)
-# sinogram = remove_large_stripe(sinogram1, 3, 81)
-# sinogram = remove_all_stripe(sinogram, 3, 81, 31)

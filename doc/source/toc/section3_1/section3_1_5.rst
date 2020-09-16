@@ -27,11 +27,11 @@ together.
   stripe artifacts (zoom-in needed). (b) Reconstructed image.
 
 
-**Python source code:**
+**Python source code**
 
   .. autofunction:: sarepy.prep.stripe_removal_original.remove_unresponsive_and_fluctuating_stripe
 
-**How it works:**
+**How it works**
 
   1 - Locating stripe artifacts
     -- Apply the strong mean filter along each column of the sinogram
@@ -92,7 +92,7 @@ together.
 
       Figure 7. (a) Corrected sinogram. (b) Reconstructed image from sinogram (a).
 
-**How to use:**
+**How to use**
 
   -- The *snr* parameter controls the sensitivity of the stripe detection
   method. Smaller is more sensitive. Recommended values: 1.1 -> 3.0. |br|
