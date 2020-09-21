@@ -189,7 +189,7 @@ def create_2d_window(width, height, u, v, n):
     return window2d
 
 
-def remove_stripe_based_fft(sinogram, u, n, v, pad):
+def remove_stripe_based_fft(sinogram, u, n, v, pad=150):
     """
     Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.
@@ -224,7 +224,7 @@ def remove_stripe_based_fft(sinogram, u, n, v, pad):
     return np.real(sinogram[pad:nrow - pad, pad:ncol - pad])
 
 
-def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad):
+def remove_stripe_based_wavelet_fft(sinogram, level, sigma, order, pad=150):
     """
     Remove stripes using the method in Ref. [1].
     Angular direction is along the axis 0.

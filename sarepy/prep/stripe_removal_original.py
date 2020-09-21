@@ -247,6 +247,7 @@ def detect_stripe(list_data, snr):
     (slope, intercept) = np.polyfit(listx[ndrop:-ndrop - 1], list_sort[ndrop:-ndrop - 1], 1)
     y_end = intercept + slope * listx[-1]
     noise_level = np.abs(y_end - intercept)
+    noise_level = np.clip(noise_level, 1e-6, None)
     val1 = np.abs(list_sort[-1] - y_end) / noise_level
     val2 = np.abs(intercept - list_sort[0]) / noise_level
     list_mask = np.zeros(npoint, dtype=np.float32)
@@ -261,9 +262,10 @@ def detect_stripe(list_data, snr):
 
 def remove_large_stripe(sinogram, snr, size, drop_ratio=0.1, norm=True):
     """
-    Remove large stripes, algorithm 5 in Ref. [1], by: locating stripes, normalizing
-    to remove full stripes, and using the sorting technique (Ref. [1]) to remove partial
-    stripes. Angular direction is along the axis 0.
+    Remove large stripes, algorithm 5 in Ref. [1], by: locating stripes,
+    normalizing to remove full stripes, and using the sorting technique
+    (Ref. [1]) to remove partial stripes. Angular direction is along the
+    axis 0.
 
     Parameters
     ----------
@@ -274,8 +276,8 @@ def remove_large_stripe(sinogram, snr, size, drop_ratio=0.1, norm=True):
     size : int
         Window size of the median filter.
     drop_ratio : float, optional
-        Ratio of pixels to be dropped, which is used to to reduce
-        the possibility of the false detection of stripes.
+        Ratio of pixels to be dropped, which is used to reduce the false
+        detection of stripes.
     norm : bool, optional
         Apply normalization if True.
 
@@ -295,8 +297,8 @@ def remove_large_stripe(sinogram, snr, size, drop_ratio=0.1, norm=True):
     sino_smooth = median_filter(sino_sort, (1, size))
     list1 = np.mean(sino_sort[ndrop:nrow - ndrop], axis=0)
     list2 = np.mean(sino_smooth[ndrop:nrow - ndrop], axis=0)
-    list2[list2 == 0.0] = np.mean(list2)
-    list_fact = list1 / list2
+    list_fact = np.divide(list1, list2,
+                         out=np.ones_like(list1), where=list2 != 0)
     list_mask = detect_stripe(list_fact, snr)
     list_mask = np.float32(binary_dilation(list_mask, iterations=1))
     mat_fact = np.tile(list_fact, (nrow, 1))
@@ -348,9 +350,8 @@ def remove_unresponsive_and_fluctuating_stripe(sinogram, snr, size, residual=Fal
     sino_smooth = np.apply_along_axis(uniform_filter1d, 0, sinogram, 10)
     list_diff = np.sum(np.abs(sinogram - sino_smooth), axis=0)
     list_diff_bck = median_filter(list_diff, size)
-    nmean = np.mean(np.abs(list_diff_bck))
-    list_diff_bck[list_diff_bck == 0.0] = nmean
-    list_fact = list_diff / list_diff_bck
+    list_fact = np.divide(list_diff, list_diff_bck,
+                         out=np.ones_like(list_diff), where=list_diff_bck != 0)
     list_mask = detect_stripe(list_fact, snr)
     list_mask = np.float32(binary_dilation(list_mask, iterations=1))
     list_mask[0:2] = 0.0
