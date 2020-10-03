@@ -1,3 +1,5 @@
+.. _interpolation_method:
+
 Deriving an interpolation-based ring removal method
 ===================================================
 

@@ -34,4 +34,8 @@ How to use
   *la_size* can be determined in a straightforward way by the size and the brightness of
   detector defects. Larger is stronger but more computationally expensive. |br|
   -- The *sm_size* parameter controls the strength of the median filter used
-  for removing small-to-medium partial and full stripes.
+  for removing small-to-medium partial and full stripes. |br| |br|
+
+**Another combination of algorithms** which removes stripe artifacts based on interpolation
+instead of using a smoothing filter is shown in section 4.2. |br|
+  :ref:`4.2 Deriving an interpolation-based ring removal method <interpolation_method>`
