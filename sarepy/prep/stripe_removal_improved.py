@@ -182,7 +182,7 @@ def remove_stripe_based_interpolation(sinogram, snr, size, drop_ratio=0.1, norm=
 
     Returns
     -------
-    float
+    ndarray
         2D array. Stripe-removed sinogram.
 
     References
@@ -193,24 +193,24 @@ def remove_stripe_based_interpolation(sinogram, snr, size, drop_ratio=0.1, norm=
     sinogram = np.copy(sinogram)
     (nrow, ncol) = sinogram.shape
     ndrop = int(0.5 * drop_ratio * nrow)
-    sinosort = np.sort(sinogram, axis=0)
-    sinosmooth = median_filter(sinosort, (1, size))
-    list1 = np.mean(sinosort[ndrop:nrow - ndrop], axis=0)
-    list2 = np.mean(sinosmooth[ndrop:nrow - ndrop], axis=0)
-    listfact = list1 / list2
-    listmask = detect_stripe(listfact, snr)
-    listmask = np.float32(binary_dilation(listmask, iterations=1))
-    matfact = np.tile(listfact, (nrow, 1))
+    sino_sort = np.sort(sinogram, axis=0)
+    sino_smooth = median_filter(sino_sort, (1, size))
+    list1 = np.mean(sino_sort[ndrop:nrow - ndrop], axis=0)
+    list2 = np.mean(sino_smooth[ndrop:nrow - ndrop], axis=0)
+    list_fact = np.divide(list1, list2,
+                          out=np.ones_like(list1), where=list2 != 0)
+    list_mask = detect_stripe(list_fact, snr)
+    list_mask = np.float32(binary_dilation(list_mask, iterations=1))
+    mat_fact = np.tile(list_fact, (nrow, 1))
     if norm is True:
-        sinogram = sinogram / matfact
-    listmask[0:2] = 0.0
-    listmask[-2:] = 0.0
-    listx = np.where(listmask < 1.0)[0]
+        sinogram = sinogram / mat_fact
+    list_mask[0:2] = 0.0
+    list_mask[-2:] = 0.0
+    listx = np.where(list_mask < 1.0)[0]
     listy = np.arange(nrow)
     matz = sinogram[:, listx]
     finter = interpolate.interp2d(listx, listy, matz, kind='linear')
-    listxmiss = np.where(listmask > 0.0)[0]
-    if len(listxmiss) > 0:
-        matzmiss = finter(listxmiss, listy)
-        sinogram[:, listxmiss] = matzmiss
+    listx_miss = np.where(list_mask > 0.0)[0]
+    if len(listx_miss) > 0:
+        sinogram[:, listx_miss] = finter(listx_miss, listy)
     return sinogram
