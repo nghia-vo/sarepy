@@ -38,4 +38,5 @@ How to use
 
 **Another combination of algorithms** which removes stripe artifacts based on interpolation
 instead of using a smoothing filter is shown in section 4.2. |br|
+
   :ref:`4.2 Deriving an interpolation-based ring removal method <interpolation_method>`

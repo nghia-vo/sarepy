@@ -23,7 +23,7 @@ algorithm 4, 5, and 6 in Ref. [1].
   used in the method of :ref:`removing unresponsive and fluctuating stripes <remove_dead_stripe>`.
 
 **Demonstration**
-  - Remove small-to-medium stripes
+  - Remove small-to-medium stripes:
 
   .. code-block:: py
 
@@ -48,7 +48,7 @@ algorithm 4, 5, and 6 in Ref. [1].
 
     Figure 1. Reconstructed images before (a) and after (b) removing stripe artifacts.
 
-  - Remove large stripes
+  - Remove large stripes:
 
   .. code-block:: py
 
@@ -67,7 +67,7 @@ algorithm 4, 5, and 6 in Ref. [1].
 
     Figure 2. Reconstructed images before (a) and after (b) removing stripe artifacts.
 
-    - Remove dead stripes
+    - Remove dead stripes:
 
     .. code-block:: py
 

@@ -11,8 +11,8 @@ Method for removing unresponsive and fluctuating stripes
 artifacts and streak artifacts in the reconstructed image (Fig. 1). Unfortunately, they
 cannot be removed using the smoothing-based approaches as in the previous
 methods because intensity profiles are significantly different
-between pixels inside stripes and outside stripes.  An effective way of
-removing them is by using an interpolation technique after locating them.
+between pixels inside stripes and outside stripes.  A simple way of
+removing them is to use an interpolation technique after locating them.
 The intensity profiles of those stripes show opposite characteristics. The
 unresponsive stripe shows very little variation while the fluctuating stripe
 shows excessive variation. Exploiting these features can help us detect them all

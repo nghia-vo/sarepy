@@ -10,34 +10,34 @@ Causes of ring artifacts
 
   Figure 1. (a) Reconstructed image. (b) Sinogram.
 
-Ring artifacts in the reconstructed image (Fig. 1a), corresponding to stripe
-artifacts in the sinogram (Fig. 1b), come from two major sources:
+Ring artifacts in a reconstructed image (Fig. 1a), corresponding to stripe
+artifacts in a sinogram (Fig. 1b), come from two major sources:
 
 
    1. Irregular responses of a detecting system.
    2. Uncorrelated pixels between images with sample (projections) and images
       without sample (flat-field or white-field images).
 
-**1.** The irregular responses of the detecting system is caused by defects in
+**1.** Irregular responses of a detecting system are caused by defects in
 different parts of the system such as the non-linear response of a sensor chip,
 dust on optics components (lens, mirrors…), and especially a scintillator,
-which is the major contributor. Some defects of the scintillator are visible as shown
-in Fig. 2.
+which is the major contributor. As can be seen in Fig. 2, defects from a scintillator
+are clearly visible.
 
 .. figure:: section1_figs/fig2.jpg
   :figwidth: 50 %
   :align: center
   :figclass: align-center
 
-  Figure 2. Flat-field image shows defects in the scintillator
+  Figure 2. Flat-field image shows defects of a scintillator
 
 However, there are invisible defects which also result in stripe artifacts but
-can only be revealed by analysing the linear response of the detector. Analysis
+can only be revealed by analysing the linear response of a detector. Analysis
 can be performed by acquiring projections through an X-ray absorber (e.g a glass
 plate) at different thicknesses by rotating the plate in the range of 0 degree
-to ~80 degree (making sure that the plate doesn't block X-ray completely)
+to ~80 degree (to make sure that the plate doesn't block X-ray completely)
 . Lines were fitted to the measured intensities of every pixel based on the
-Beer-Lambert’s law. The intercepts and slopes of the fitting results of all
+Beer-Lambert’s law. Intercepts and slopes of the fitting results of all
 pixels (Fig. 3) help to reveal the underlying information about the quality of the
 scintillator.
 
@@ -47,17 +47,16 @@ scintillator.
   :figclass: align-center
 
   Figure 3. Analysis of the linear response of the detector, giving the image in
-  Fig. 2, helps to reveal the underlying defects. (a) X-ray intensities are
+  Fig. 2, helps to reveal underlying defects. (a) X-ray intensities are
   varied by rotating an X-ray attenuator. (b) Intercepts of the fitting results.
   (c) Slopes of the fitting results.
 
-Retrieved response maps are useful to characterize a detector system and can
-be used to correct the irregular response of large size detectors where the response
-of each pixel is quite independent. However, in synchrotron-based microtomography
+Retrieved response maps are useful to characterize detector systems and can
+be used to correct irregular responses of large size detectors where the response
+of each pixel is independent. However, in synchrotron-based microtomography
 systems, where scintillators are mainly unstructured types to achieve high
-resolution, the response maps cannot be used for correction. The reason is that
-the response of each pixel is not independent due to the scattering of
-scintillation photons as can be seen in Fig. 4.
+resolution, this cannot be done due to the scattering of scintillation photons (Fig. 4)
+making the response of each pixel depend on its neighbors.
 
 .. figure:: section1_figs/fig4.jpg
   :figwidth: 65 %
@@ -72,7 +71,7 @@ scintillation photons as can be seen in Fig. 4.
 As a result, the shape and absorption characteristics of a sample dictate the
 influence of scattered light to the response of a pixel. This means that the
 occurrence of artifacts depend on samples and projection angles. Figure 6
-shows the reconstructed images at the same slice of three samples with different
+shows reconstructed images at the same slice of three samples with different
 shapes and absorption characteristics (Fig. 5) where all tomographic datasets
 were collected under the same conditions. As can be seen, there are ring
 artifacts in sample 3 which don't occur in sample 1 and 2.
@@ -120,7 +119,7 @@ flat-field images. The first one is zingers caused by scattered x-rays
 hitting the CCD chip directly (Fig. 7(a)). The second one is blobs
 (Fig. 7(b)) introduced by X-ray optics components in a synchrotron-based tomography system.
 These blobs can be shifted during data acquisition process due to the heat load
-resulting uncorrelated pixels between projections and the flat-field image.
+resulting in uncorrelated pixels between projections and the flat-field image.
 
 .. figure:: section1_figs/fig7.jpg
   :figwidth: 75 %

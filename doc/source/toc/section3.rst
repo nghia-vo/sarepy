@@ -14,12 +14,11 @@ Preprocessing methods
   correction. (b) Sinogram after correction. (c) Reconstructed image from
   sinogram (a). (d) Reconstructed image from sinogram (b).
 
-Lots of methods for removing ring artifacts in sinogram space (where the
-artifacts appear as straight lines or stripe artifacts), known as stripe removal
-methods, were proposed. They use all sorts of image processing methods:
-smoothing filter, image segmentation, image interpolation...It is easier to classify
-the methods based on the assumptions they rely on for removing stripe artifacts.
-There are 4 basic assumptions:
+Lots of methods for removing ring artifacts in the sinogram space, where the
+artifacts appear as straight lines or stripe artifacts, were proposed. They use
+all sorts of image processing methods: smoothing filter, segmentation, interpolation...
+It is easier to classify these methods based on assumptions about causes of artifacts
+they rely on. There are 4 basic assumptions:
 
 1. Stripe artifacts are caused by differences in offsets of intensities
    between neighboring pixels (i.e the full stripe type). Most of methods rely on
@@ -48,7 +47,7 @@ stripes, a rule of thumb is that users need to assess: the quality of a
 flat-field image; sizes of stripe artifacts; the dynamic
 range of sinogram intensities; and intensity profiles of pixels inside
 stripes in comparison to their neighbors; to find the best combination of
-the methods.
+methods.
 
 .. toctree::
 
@@ -67,23 +66,23 @@ Postprocessing methods
   :align: center
   :figclass: align-center
 
-  Figure 2. Postprocessing methods work on reconstruction space . (a)
+  Figure 2. Postprocessing methods work on the reconstruction space . (a)
   Reconstructed image before correction. (b) Polar transformation of image (a).
   (c) Stripe artifacts removed from image (b). (d) Cartesian transformation of
-  image(c).
+  image (c).
 
-These methods work on the reconstructed image by transforming the problem of
+These methods work on the reconstruction space by transforming the problem of
 removing ring artifacts to the problem of removing stripe artifacts using the
 polar transformation (Fig. 2). It is important to know that the assumptions
 of 1 and 4 above, used by pre-processing methods to remove stripe artifacts, are
-not applicable to the transformed image. These assumptions are based on
-underlying physics of the detecting system and the standard way of acquiring
-tomographic data which no more valid in reconstruction space. Postprocessing
-methods are popularly used in cone-beam tomography for few reasons:
+not applicable to a transformed image. These assumptions are based on
+the underlying physics of a detecting system and the standard way of acquiring
+tomographic data which are no more valid in the reconstruction space. Postprocessing
+methods are popularly used in cone-beam tomography for a few reasons:
 
 - Due to the cone-beam geometry, reconstructing a slice requires a few adjacent
   sinograms (i.e multiple-rows of projection images). This means that
-  the pre-processing methods need to be adapted to work on a 3D image. This is
+  pre-processing methods need to be adapted to work on a 3D image. This is
   not convenient and can be computationally expensive.
 
 - To reduce the cone-beam artifacts, tomographic data are often acquired using a
@@ -97,7 +96,7 @@ methods are popularly used in cone-beam tomography for few reasons:
 There are limitations of postprocessing methods which users need to be aware
 of: they can't remove side effects of unresponsive and fluctuating stripe artifacts (section 2)
 which not only give rise to ring artifacts but also streak artifacts in
-the reconstructed image (Fig. 1(c)); they can yield void-center artifacts
+a reconstructed image (Fig. 1(c)); they can yield void-center artifacts
 caused by over-smoothing the over-sampled areas of the transformed image (left
 sides of Fig. 2(b,d)); there is information loss and artifact propagation
 during the transformation between the polar and Cartesian coordinate systems.

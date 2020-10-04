@@ -15,15 +15,15 @@ Equalization-based methods for removing partial and full stripe artifacts
   (b) Low-pass filter of the intensities in (a). (c) Full stripe. (d) Low-pass
   filter of the intensities in (c)
 
-As can be seen in Fig.1, difference of low-frequency components of intensity
-profiles between adjacent pixels is the cause of stripe artifacts.
-To remove these stripes, we need to equalize the responses of the adjacent pixels.
+As can be seen in Fig.1, the differences in low-frequency components between the intensity
+profiles of adjacent pixels are the causes of stripe artifacts.
+To remove these stripes, we need to equalize the responses of these pixels.
 This can be done by applying a smoothing filter along the horizontal direction.
-This approach, however, can't be used directly on a sinogram as it introduces
-void-center artifacts and blurs a reconstructed image. To workaround these
+This approach, however, can't be used directly on a sinogram image as it introduces
+void-center artifacts and blurs the reconstructed image. To workaround these
 problems, the sinogram can be transformed or pre-processed to reveal underlying
-response curves, then the smooth filter or a correction method can be applied.
-There are three different ways of extracting these underlying responses as
+response curves, then a smoothing filter or a correction method can be applied.
+There are three different ways of extracting the underlying responses as
 shown below; ordered from fine to coarse extraction.
 
 .. _sorting:
@@ -192,7 +192,7 @@ Fitting-based approach
 
   How it works
     This method is an extreme of the filtering-based method where low-pass
-    components is extracted by the polynomial fitting in the real space. Because
+    components are extracted by applying polynomial fitting in the real space. Because
     of that it is limited to be used for sinograms having low dynamic range of
     intensities where its low-pass components can be represented by a low order
     polynomial fit. Steps of the method are: applying a polynomial fit to each

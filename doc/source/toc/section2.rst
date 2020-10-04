@@ -3,13 +3,13 @@ Classification of stripe artifact types
 ***************************************
 
 Occurrence of stripe artifacts (ring artifacts in reconstructed images)
-depending on a sample makes it challenging to design a generic approach to
-remove them. Furthermore, there are many types of stripe artifacts which may
+depending on a sample makes it difficult to find a generic approach for
+removing them. Furthermore, there are many types of stripe artifacts which may
 require different ways of treatment. The use of pre-processing techniques such
 as distortion correction or phase retrieval blurs and enlarges these stripes,
 making it even more challenging to clean them. It is important to understand
 physical causes of stripe artifacts and classify them. This helps to tackle the
-problem most efficiently. By comparing an intensity profile, which
+problem most efficiently. By comparing the intensity profile, which
 is the plot of measured intensities against angles, of a defective pixel
 with its adjacent non-defective pixel we can classify stripe artifacts into four
 different types.
@@ -19,7 +19,7 @@ Full stripe
 
 A typical profile of a full stripe exhibits intensities that are offset at all
 angles compared with that of a neighboring good pixel (Fig. 1(a, b)). It gives
-rise to a half-ring artifact (in 180-degree tomography) in the reconstructed
+rise to a half-ring artifact (in 180-degree scanning tomography) in a reconstructed
 image (Fig. 1(c)).
 
 .. figure:: section2_figs/fig1.jpg
@@ -35,9 +35,9 @@ image (Fig. 1(c)).
 Partial stripe
 ==============
 
-Different to the full stripe, intensities of a partial stripe are offset only
+Different to a full stripe, intensities of a partial stripe are offset only
 at certain ranges of angles as demonstrated in Fig. 2. As a result, it gives
-rise to a partial ring artifact in the reconstructed image (Fig. 2(c)).
+rise to a partial ring artifact in a reconstructed image (Fig. 2(c)).
 
 .. figure:: section2_figs/fig2.jpg
   :figwidth: 100 %
@@ -55,7 +55,7 @@ Unresponsive stripe
 ===================
 
 Intensities of this type of stripe are independent of the angles. The pixel is
-not responsive to the variation of intensity versus the angle in the same way
+not responsive to the variation of intensity versus the angle as the same way
 as its neighboring good pixel. This type of stripes may come from dead pixels
 of a sensor chip, light-blocking dusts or damaged scintillator (bright blobs
 in Fig. 3(a)) giving rise to stripes of constant brightness as clearly visible
@@ -80,7 +80,7 @@ Fluctuating stripe
 
 Intensities fluctuate significantly across angles. This type of stripes
 may come from defective pixels of a sensor chip rather than optical
-components. They are extremely small in number and their size is between 1 or
+components. They are extremely small in number and their size is often between 1 or
 2 pixels. Like unresponsive stripes, they give rise to both ring artifacts
 and streak artifacts as demonstrated in Fig. 4.
 
@@ -100,14 +100,13 @@ Other types of stripes
 ======================
 
 There are other types of stripes which are combinations of above stripes
-such as full stripes and partial stripes, or the extension of them such
-as large stripes (Fig. 5) or blurry stripes. Blurry stripes may come from the use of
-pre-processing methods such as phase retrieval or distortion correction.  Large
-stripes are caused by large defects in a detector which are not always visible
-in radiographs. They may come from adjacent areas of a damaged scintillator
-which receives extra scattering light, i.e. the so-called halo effect, as shown
-in Fig. 5. Large stripes need a separate treatment to reduce the side effects
-of cleaning methods.
+or the extension of them such as large stripes (Fig. 5) or blurry stripes.
+Blurry stripes may come from the use of pre-processing methods such as phase
+retrieval or distortion correction.  Large stripes are caused by large defects
+in a detector which are not always visible in radiographs. They may come from
+adjacent areas of a damaged scintillator which receives extra scattering light,
+i.e. the so-called halo effect, as shown in Fig. 5. Large stripes may need a separate
+treatment to reduce side effects of cleaning methods.
 
 .. figure:: section2_figs/fig5.jpg
   :figwidth: 100 %
