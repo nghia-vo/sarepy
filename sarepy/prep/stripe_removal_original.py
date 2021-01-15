@@ -290,6 +290,7 @@ def remove_large_stripe(sinogram, snr, size, drop_ratio=0.1, norm=True):
     ----------
     .. [1] https://doi.org/10.1364/OE.26.028396
     """
+    sinogram = np.copy(sinogram)  # Make it mutable
     drop_ratio = np.clip(drop_ratio, 0.0, 0.8)
     (nrow, ncol) = sinogram.shape
     ndrop = int(0.5 * drop_ratio * nrow)
