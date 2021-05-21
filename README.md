@@ -16,6 +16,13 @@ Nghia Vo - *Diamond Light Source*
 
 Daniel S. Hussey - *NIST: National Institute of Standards and Technology* 
 
+Importance notice:
+------------------
+Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
+the **Algotom** package, https://github.com/algotom/algotom . Algotom is a
+complete software package for processing tomographic reconstruction. It is
+installable using Conda and Pip.
+
 How to use
 ==========
 Clone or download the codes to your local machine, then insert the following two lines to your python codes:  

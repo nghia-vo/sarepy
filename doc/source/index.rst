@@ -23,7 +23,7 @@ but also to cover the following topics:
 
 *Importance notice:*
 --------------------
-Since 05/2021, methods in **Sarepy** have been added and developed further in
+Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
 the **Algotom** package, https://github.com/algotom/algotom . Algotom is a
 complete software package for processing tomographic reconstruction. It is
 installable using Conda and Pip.
