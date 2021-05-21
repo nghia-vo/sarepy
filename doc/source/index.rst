@@ -9,10 +9,10 @@ Welcome to Sarepy's documentation about removing ring artifacts in tomography.
 This documentation is not only to explain functions used in the Sarepy package
 but also to cover the following topics:
 
-    - Causes of ring artifacts.
-    - Classification of ring artifacts.
-    - How ring removal methods work; pros and cons of each method; how to use them efficiently; and how to improve them.
-    - Applications of the methods.
+- Causes of ring artifacts.
+- Classification of ring artifacts.
+- How ring removal methods work; pros and cons of each method; how to use them efficiently; and how to improve them.
+- Applications of the methods.
 
 **Source code:** https://github.com/nghia-vo/sarepy
 
