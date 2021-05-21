@@ -1,5 +1,5 @@
 ***********************************
-Methods of removing ring artifacts
+Methods for removing ring artifacts
 ***********************************
 
 Preprocessing methods
@@ -41,13 +41,12 @@ they rely on. There are 4 basic assumptions:
 
 We will analyse implementations of the methods relied on the assumption 1, 2,
 and 4 in details to understand the pros and cons of each method, to know how to
-use them efficiently and how to improve them. As there are many methods for
+use them efficiently and how to improve them. Because there are many methods for
 removing stripe artifacts and each of them works best on the certain types of
-stripes, a rule of thumb is that users need to assess: the quality of a
-flat-field image; sizes of stripe artifacts; the dynamic
-range of sinogram intensities; and intensity profiles of pixels inside
-stripes in comparison to their neighbors; to find the best combination of
-methods.
+stripes, to find the best combination of methods users need to assess: the
+quality of a flat-field image; sizes of stripe artifacts; the dynamic
+range of intensities; and intensity profiles of pixels inside stripes in
+comparison to their neighbors...
 
 .. toctree::
 

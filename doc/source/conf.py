@@ -36,7 +36,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'sphinx.ext.linkcode'
 ]
 
 napoleon_google_docstring = True
@@ -85,3 +86,25 @@ autodoc_mock_imports = [
     'astra',
     'tomopy'
 ]
+
+def linkcode_resolve(domain, info):
+    def find_source():
+        obj = sys.modules[info['module']]
+        for part in info['fullname'].split('.'):
+            obj = getattr(obj, part)
+        import inspect
+        mod = info['module'].replace('.', '/')
+        if mod == "vounwarp":
+            mod += "/__init__"
+        fn = mod + ".py"
+        source, lineno = inspect.getsourcelines(obj)
+        return fn, lineno, lineno + len(source) - 1
+
+    if domain != 'py' or not info['module']:
+        return None
+    try:
+        filename = '{}#L{:d}-L{:d}'.format(*find_source())
+    except Exception:
+        filename = info['module'].replace('.', '/') + '.py'
+    return "https://github.com/nghia-vo/vounwarp/tree/master/vounwarp/{}".format(filename)
+

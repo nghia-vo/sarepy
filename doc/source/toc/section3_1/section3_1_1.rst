@@ -16,12 +16,11 @@ Equalization-based methods for removing partial and full stripe artifacts
   filter of the intensities in (c)
 
 As can be seen in Fig.1, the differences in low-frequency components between the intensity
-profiles of adjacent pixels are the causes of stripe artifacts.
-To remove these stripes, we need to equalize the responses of these pixels.
-This can be done by applying a smoothing filter along the horizontal direction.
-This approach, however, can't be used directly on a sinogram image as it introduces
-void-center artifacts and blurs the reconstructed image. To workaround these
-problems, the sinogram can be transformed or pre-processed to reveal underlying
+profiles of adjacent pixels results in stripe artifacts. To remove stripes,
+we need to equalize the responses of these pixels. This can be done by applying a
+smoothing filter along the horizontal direction of a sinogram. This approach, however, introduces
+void-center artifacts and blurs reconstructed image. To workaround these
+problems, a sinogram can be transformed or pre-processed to reveal underlying
 response curves, then a smoothing filter or a correction method can be applied.
 There are three different ways of extracting the underlying responses as
 shown below; ordered from fine to coarse extraction.
@@ -75,11 +74,11 @@ Sorting-based approach
 
   How to use
     -- Users adjust the *size* of the median filter to adjust the strength of the
-    method. Larger is stronger. A rule of thumb is that it should be larger than the largest
-    size of stripes, but not too large to increase side-effect artifacts,
+    method. Larger is stronger. A practical rule is that it should be larger than
+    the largest size of stripes, but not too large to increase side-effect artifacts,
     which are streak artifacts (Fig. 2). The tolerance range of the window size
-    depends on the complexity of the sorted sinogram (Step 2(a)). In most cases,
-    it's pretty simple. This means that we can use the same *size* across
+    depends on the complexity of features of a sorted sinogram (Step 2(a)).
+    In most cases, it's pretty simple. This means that we can use the same *size* across
     sinograms of a 3D tomographic data.
 
     .. figure:: section3_1_1_figs/sorting_method/fig4.jpg
@@ -92,8 +91,7 @@ Sorting-based approach
       `here <https://github.com/nghia-vo/sarepy/tree/master/data>`_.
 
     -- Users can choose to apply a 1D smoothing filter or 2D smoothing filter
-    using the *dim* parameter. However, the 1D filter is good enough for most
-    of the cases.
+    using the *dim* parameter. However, the 1D filter is good enough for most cases.
 
   Pros
     -- It is very simple to use and works particularly well to remove partial
@@ -119,8 +117,7 @@ Sorting-based approach
     can be useful to remove the low-frequency ring artifacts in a low-contrast
     reconstructed image. |br|
     -- The smoothing filter is not applied to a small percentage of pixels at
-    the top and bottom of the sorted image. This can reduce the streak
-    artifacts. |br|
+    the top and bottom of a sorted sinogram. This can reduce streak artifacts. |br|
     -- The method can be used only to the low-pass components of
     sinogram columns by combing with the filtering-based approach as will
     be shown below. |br|
