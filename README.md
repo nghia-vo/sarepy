@@ -16,12 +16,16 @@ Nghia Vo - *Diamond Light Source*
 
 Daniel S. Hussey - *NIST: National Institute of Standards and Technology* 
 
-Importance notice:
+Importance notice
 ------------------
 Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
 the **Algotom** package, https://github.com/algotom/algotom . Algotom is a
 complete software package for processing tomographic reconstruction. It is
 installable using Conda and Pip.
+
+Many utility methods were added to Algotom which allow users to customize 
+stripe/ring removal methods as demonstrated [here](https://sarepy.readthedocs.io/toc/section5.html).
+
 
 How to use
 ==========
