@@ -57,6 +57,8 @@ comparison to their neighbors...
     section3_1/section3_1_5
     section3_1/section3_1_6
 
+.. _section_3_2:
+
 Postprocessing methods
 ======================
 
