@@ -46,7 +46,7 @@ removing stripe artifacts and each of them works best on the certain types of
 stripes, to find the best combination of methods users need to assess: the
 quality of a flat-field image; sizes of stripe artifacts; the dynamic
 range of intensities; and intensity profiles of pixels inside stripes in
-comparison to their neighbors...
+comparison to their neighbors.
 
 .. toctree::
 
@@ -69,8 +69,8 @@ Postprocessing methods
 
   Figure 2. Postprocessing methods work on the reconstruction space . (a)
   Reconstructed image before correction. (b) Polar transformation of image (a).
-  (c) Stripe artifacts removed from image (b). (d) Cartesian transformation of
-  image (c).
+  (d) Stripe artifacts removed from image (b). (c) Cartesian transformation of
+  image (d).
 
 These methods work on the reconstruction space by transforming the problem of
 removing ring artifacts to the problem of removing stripe artifacts using the
@@ -81,17 +81,17 @@ the underlying physics of a detecting system and the standard way of acquiring
 tomographic data which are no more valid in the reconstruction space. Postprocessing
 methods are popularly used in cone-beam tomography for a few reasons:
 
-- Due to the cone-beam geometry, reconstructing a slice requires a few adjacent
+- > Due to the cone-beam geometry, reconstructing a slice requires a few adjacent
   sinograms (i.e multiple-rows of projection images). This means that
   pre-processing methods need to be adapted to work on a 3D image. This is
   not convenient and can be computationally expensive.
 
-- To reduce the cone-beam artifacts, tomographic data are often acquired using a
+- > To reduce the cone-beam artifacts, tomographic data are often acquired using a
   full rotation (360-degree) scan. This results full ring artifacts instead of
   haft ring artifacts with residual streak artifacts as in a 180-degree scan
   (Fig. 1(c)). This goes well with the polar transformation.
 
-- Commercial cone-beam systems often go with their own reconstruction softwares
+- > Commercial cone-beam systems often go with their own reconstruction softwares
   which may only output reconstructed images to end-users.
 
 There are limitations of postprocessing methods which users need to be aware
