@@ -1,6 +1,6 @@
-*************************************
-Integration into the Algotom package
-*************************************
+**************************************************
+Improvements and new features available in Algotom
+**************************************************
 
 Sarepy is actually a part of the `Algotom <https://github.com/algotom/algotom>`_
 package which was released first to support the paper in :ref:`Ref. [1] <references>`.

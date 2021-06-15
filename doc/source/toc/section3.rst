@@ -81,18 +81,18 @@ the underlying physics of a detecting system and the standard way of acquiring
 tomographic data which are no more valid in the reconstruction space. Postprocessing
 methods are popularly used in cone-beam tomography for a few reasons:
 
-- > Due to the cone-beam geometry, reconstructing a slice requires a few adjacent
-  sinograms (i.e multiple-rows of projection images). This means that
-  pre-processing methods need to be adapted to work on a 3D image. This is
-  not convenient and can be computationally expensive.
+    - > Due to the cone-beam geometry, reconstructing a slice requires a few adjacent
+      sinograms (i.e multiple-rows of projection images). This means that
+      pre-processing methods need to be adapted to work on a 3D image. This is
+      not convenient and can be computationally expensive.
 
-- > To reduce the cone-beam artifacts, tomographic data are often acquired using a
-  full rotation (360-degree) scan. This results full ring artifacts instead of
-  haft ring artifacts with residual streak artifacts as in a 180-degree scan
-  (Fig. 1(c)). This goes well with the polar transformation.
+    - > To reduce the cone-beam artifacts, tomographic data are often acquired using a
+      full rotation (360-degree) scan. This results full ring artifacts instead of
+      haft ring artifacts with residual streak artifacts as in a 180-degree scan
+      (Fig. 1(c)). This goes well with the polar transformation.
 
-- > Commercial cone-beam systems often go with their own reconstruction softwares
-  which may only output reconstructed images to end-users.
+    - > Commercial cone-beam systems often go with their own reconstruction softwares
+      which may only output reconstructed images to end-users.
 
 There are limitations of postprocessing methods which users need to be aware
 of: they can't remove side effects of unresponsive and fluctuating stripe artifacts (section 2)
