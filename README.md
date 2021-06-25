@@ -2,9 +2,13 @@
 (S)tripe (A)rtifacts (RE)moval in (PY)thon
 ## Numerical techniques for ring artifact removal in X-ray micro-tomography
 
-**Sarepy** is Python implementation of methods for removing ring artifacts in tomography. These methods were published in Optics Express journal; Nghia T. Vo, Robert C. Atwood, and Michael Drakopoulos, *"Superior techniques for eliminating ring artifacts in X-ray micro-tomography,"* Opt. Express 26, 28396-28412 (2018). https://doi.org/10.1364/OE.26.028396.
+**Sarepy** is Python implementation of methods for removing ring artifacts in 
+tomography. These methods were published in Optics Express journal; 
+Nghia T. Vo, Robert C. Atwood, and Michael Drakopoulos, 
+*"Superior techniques for eliminating ring artifacts in X-ray micro-tomography,"* 
+Opt. Express 26, 28396-28412 (2018). https://doi.org/10.1364/OE.26.028396.
 
-Sarepy includes implementation of a few former methods and post-processing methods.
+Sarepy includes implementations of a few former methods and post-processing methods.
 
 #### Authors:
 
@@ -53,15 +57,15 @@ Documentation
 Update Notes
 ------------
 - 09/10/2019:  
-   Add methods for loading and saving data (from vounwarp), methods for calculating center of rotation, wrappers of reconstruction methods (from tomopy and astra). This allows users to try or test ring removal methods easily.
+  Add methods for loading and saving data (from vounwarp), methods for calculating center of rotation, wrappers of reconstruction methods (from tomopy and astra). This allows users to try or test ring removal methods easily.
 - 11/02/2020:  
-   Allow to use 2D kernel in the median filter of the sorting-based correction methods. This is done based on feedbacks from neutron imaging users. Note that this increases the computational cost.  
-   Add some sinograms for testing.
+  Allow to use 2D kernel in the median filter of the sorting-based correction methods. This is done based on feedbacks from neutron imaging users. Note that this increases the computational cost.  
+  Add some sinograms for testing.
 - 05/05/2020:  
-   Publish documentation on readthedocs.  
-   Add postprocessing methods.
+  Publish documentation on readthedocs.  
+  Add postprocessing methods.
 - 15/09/2020:  
-   Add an interpolation-based stripe removal method. It is a combination of algorithm 4, 5, and 6 in https://doi.org/10.1364/OE.26.028396
-- 05/2021:
-   Integrate and maintain codes in the Algotom package: https://github.com/algotom/algotom
+  Add an interpolation-based stripe removal method. It is a combination of algorithm 4, 5, and 6 in https://doi.org/10.1364/OE.26.028396
+- 05/2021:  
+  Integrate and maintain codes in the Algotom package.
    
