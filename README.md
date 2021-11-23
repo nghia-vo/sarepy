@@ -18,8 +18,8 @@ Nghia Vo - *Diamond Light Source*
 
 Daniel S. Hussey - *NIST: National Institute of Standards and Technology* 
 
-Importance notice
-------------------
+Important notice
+----------------
 Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
 the **Algotom** package, https://github.com/algotom/algotom . Algotom is a
 complete software package for processing tomographic reconstruction. It is
