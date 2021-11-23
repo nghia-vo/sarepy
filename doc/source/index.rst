@@ -23,8 +23,8 @@ but also to cover the following topics:
 
 **Keywords:** Ring artifact removal, Tomography, Stripe artifacts, Tutorial.
 
-Importance notice
------------------
+Important notice
+----------------
 Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
 the **Algotom** package, https://github.com/algotom/algotom . Algotom (Ref. [3])
 is a complete software package for processing tomographic reconstruction. It is
