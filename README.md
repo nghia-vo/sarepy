@@ -39,6 +39,9 @@ sys.path.insert(0, "path-to-sarepy-pck")
 Making sure that the python libs in the requirements.txt are installed before use.  
 Details of how to use the methods can be found in /examples/examples.py. Noting that parameters chosen in these examples are for the sinograms in the /data folder. The selected windows of the median filter (81 for large stripes, 31 for others) may be overkill for good quality detectors. You should change these paramaters to suit your data.
 
+Output of methods is 32-bit data. A viewer software which can display 32-bit tiff image is needed, e.g. [ImageJ](https://imagej.nih.gov/ij/download.html) 
+or [Fiji](https://imagej.net/software/fiji/downloads).
+
 Features
 ========
 - Methods for cleaning different types of stripe artifacts: full stripes, partial stripes, unresponsive stripes, fluctuating stripes, large stripes, and blurry stripes.
