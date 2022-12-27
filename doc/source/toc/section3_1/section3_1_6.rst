@@ -24,9 +24,12 @@ The following implementation of combining the methods is the simplest and most
 efficient because it uses the least number of parameters. More importantly the
 same set of parameters can be used for whole dataset.
 
-.. autofunction:: sarepy.prep.stripe_removal_original.remove_all_stripe
+**Code**
 
-How to use
+    .. autofunction:: sarepy.prep.stripe_removal_original.remove_all_stripe
+
+**How to use**
+
   -- The *snr* parameter controls the sensitivity of the stripe detection
   method. Smaller is more sensitive. Recommended values: 1.1 -> 3.0. |br|
   -- The *la_size* parameter controls the strength of the median filter
@@ -36,7 +39,5 @@ How to use
   -- The *sm_size* parameter controls the strength of the median filter used
   for removing small-to-medium partial and full stripes. |br| |br|
 
-**Another combination of algorithms** which removes stripe artifacts based on interpolation
-instead of using a smoothing filter is shown in section 4.2. |br|
-
-  :ref:`4.2 Deriving an interpolation-based ring removal method <interpolation_method>`
+Another combination of algorithms which removes stripe artifacts based on interpolation
+instead of using a smoothing filter is shown in :ref:`section 4.2 <interpolation_method>`.
