@@ -28,6 +28,8 @@ Important notice
 Starting 05/2021, methods in **Sarepy** have been integrated and developed further in
 the **Algotom** package, https://github.com/algotom/algotom . Algotom (Ref. [3])
 is a complete package for processing tomographic data. It is installable using Conda and Pip.
+Demonstrations of using different removal methods on challenging sinograms are shown here:
+https://algotom.readthedocs.io/en/latest/toc/section4/section4_4.html
 
 Table of Contents
 =================
