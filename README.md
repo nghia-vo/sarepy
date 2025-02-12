@@ -29,6 +29,9 @@ stripe/ring removal methods as demonstrated [here](https://sarepy.readthedocs.io
 
 Comparison of using different removal methods on challenging sinograms is shown [here](https://algotom.readthedocs.io/en/latest/toc/section4/section4_4.html)
 
+Sarepy remains useful for understanding how ring removal methods work, as well as the causes and types of ring artifacts, 
+which are explained in detail at https://sarepy.readthedocs.io/
+
 How to use
 ==========
 
